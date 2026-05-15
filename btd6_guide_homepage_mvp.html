@@ -1,0 +1,257 @@
+
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: var(--font-sans); }
+.nav { display: flex; align-items: center; justify-content: space-between; padding: 14px 0 14px; border-bottom: 0.5px solid var(--color-border-tertiary); margin-bottom: 2rem; }
+.logo { display: flex; align-items: center; gap: 8px; font-size: 16px; font-weight: 500; color: var(--color-text-primary); }
+.logo-dot { width: 28px; height: 28px; border-radius: 50%; background: #D85A30; display: flex; align-items: center; justify-content: center; }
+.nav-links { display: flex; gap: 24px; }
+.nav-links a { font-size: 14px; color: var(--color-text-secondary); text-decoration: none; }
+.nav-links a:hover { color: var(--color-text-primary); }
+.nav-cta { font-size: 13px; padding: 6px 14px; border: 0.5px solid var(--color-border-secondary); border-radius: var(--border-radius-md); color: var(--color-text-primary); cursor: pointer; background: transparent; }
+.hero { text-align: center; padding: 2.5rem 0 2rem; }
+.hero-badge { display: inline-flex; align-items: center; gap: 6px; background: #FAECE7; color: #993C1D; font-size: 12px; padding: 4px 12px; border-radius: 99px; margin-bottom: 1rem; }
+.hero h1 { font-size: 32px; font-weight: 500; color: var(--color-text-primary); line-height: 1.25; margin-bottom: 0.75rem; }
+.hero p { font-size: 15px; color: var(--color-text-secondary); line-height: 1.7; max-width: 480px; margin: 0 auto 1.5rem; }
+.hero-actions { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+.btn-primary { padding: 9px 20px; background: #D85A30; color: #fff; border: none; border-radius: var(--border-radius-md); font-size: 14px; cursor: pointer; }
+.btn-secondary { padding: 9px 20px; background: transparent; border: 0.5px solid var(--color-border-secondary); border-radius: var(--border-radius-md); font-size: 14px; color: var(--color-text-primary); cursor: pointer; }
+.search-bar { display: flex; align-items: center; gap: 10px; background: var(--color-background-secondary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); padding: 10px 16px; margin: 2rem auto 0; max-width: 520px; }
+.search-bar input { border: none; background: transparent; font-size: 14px; color: var(--color-text-primary); flex: 1; outline: none; }
+.search-bar input::placeholder { color: var(--color-text-tertiary); }
+.section-label { font-size: 11px; font-weight: 500; letter-spacing: 0.08em; color: var(--color-text-tertiary); text-transform: uppercase; margin-bottom: 1rem; }
+.section { margin-bottom: 2.5rem; }
+.grid-4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; }
+.grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 10px; }
+.grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 12px; }
+.quick-card { background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); padding: 1rem; cursor: pointer; transition: border-color 0.15s; }
+.quick-card:hover { border-color: var(--color-border-secondary); }
+.quick-card .icon { font-size: 22px; margin-bottom: 8px; color: #D85A30; }
+.quick-card h3 { font-size: 13px; font-weight: 500; color: var(--color-text-primary); margin-bottom: 4px; }
+.quick-card p { font-size: 12px; color: var(--color-text-secondary); line-height: 1.5; }
+.feature-card { background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); padding: 1.25rem; cursor: pointer; }
+.feature-card:hover { border-color: var(--color-border-secondary); }
+.feature-top { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 10px; }
+.feature-card h3 { font-size: 14px; font-weight: 500; color: var(--color-text-primary); margin-bottom: 4px; }
+.feature-card p { font-size: 13px; color: var(--color-text-secondary); line-height: 1.6; }
+.badge { display: inline-block; font-size: 11px; padding: 2px 8px; border-radius: 99px; }
+.badge-new { background: #EAF3DE; color: #3B6D11; }
+.badge-hot { background: #FAECE7; color: #993C1D; }
+.badge-event { background: #EEEDFE; color: #3C3489; }
+.badge-updated { background: #FAEEDA; color: #854F0B; }
+.tier-row { display: flex; align-items: center; gap: 10px; padding: 10px 14px; background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-md); margin-bottom: 6px; cursor: pointer; }
+.tier-row:hover { border-color: var(--color-border-secondary); }
+.tier-badge { width: 28px; height: 28px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 500; flex-shrink: 0; }
+.tier-s { background: #FAECE7; color: #993C1D; }
+.tier-a { background: #FAEEDA; color: #854F0B; }
+.tier-b { background: #EAF3DE; color: #3B6D11; }
+.tier-name { flex: 1; font-size: 13px; color: var(--color-text-primary); }
+.tier-desc { font-size: 12px; color: var(--color-text-secondary); }
+.news-card { display: flex; gap: 12px; padding: 12px 0; border-bottom: 0.5px solid var(--color-border-tertiary); align-items: flex-start; cursor: pointer; }
+.news-card:last-child { border-bottom: none; }
+.news-thumb { width: 48px; height: 48px; border-radius: var(--border-radius-md); display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; }
+.news-meta { font-size: 11px; color: var(--color-text-tertiary); margin-top: 4px; }
+.news-title { font-size: 13px; font-weight: 500; color: var(--color-text-primary); line-height: 1.4; margin-bottom: 3px; }
+.ct-banner { background: var(--color-background-secondary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); padding: 1.25rem 1.5rem; display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 2.5rem; flex-wrap: wrap; }
+.ct-left { display: flex; align-items: center; gap: 12px; }
+.ct-icon { width: 40px; height: 40px; border-radius: var(--border-radius-md); background: #EEEDFE; display: flex; align-items: center; justify-content: center; font-size: 20px; color: #534AB7; }
+.ct-title { font-size: 14px; font-weight: 500; color: var(--color-text-primary); margin-bottom: 2px; }
+.ct-sub { font-size: 12px; color: var(--color-text-secondary); }
+.ct-countdown { display: flex; gap: 12px; align-items: center; }
+.ct-time { text-align: center; }
+.ct-time .num { font-size: 20px; font-weight: 500; color: var(--color-text-primary); }
+.ct-time .lbl { font-size: 10px; color: var(--color-text-tertiary); text-transform: uppercase; letter-spacing: 0.06em; }
+.ct-sep { font-size: 18px; color: var(--color-text-tertiary); margin-top: -6px; }
+.divider { height: 0.5px; background: var(--color-border-tertiary); margin: 0 0 2.5rem; }
+.footer { border-top: 0.5px solid var(--color-border-tertiary); padding: 1.5rem 0; display: flex; justify-content: space-between; align-items: center; flex-wrap: gap; }
+.footer-links { display: flex; gap: 20px; }
+.footer-links a { font-size: 12px; color: var(--color-text-tertiary); text-decoration: none; }
+.footer-copy { font-size: 12px; color: var(--color-text-tertiary); }
+</style>
+
+<div style="padding: 0 4px;">
+
+<nav class="nav">
+  <div class="logo">
+    <div class="logo-dot"><i class="ti ti-target" style="font-size:14px; color:#fff;" aria-hidden="true"></i></div>
+    BTD6攻略站
+  </div>
+  <div class="nav-links">
+    <a href="#">塔库</a>
+    <a href="#">地图</a>
+    <a href="#">攻略战</a>
+    <a href="#">Tier List</a>
+  </div>
+  <button class="nav-cta" onclick="sendPrompt('帮我规划网站的塔库页面')">加入团队 ↗</button>
+</nav>
+
+<div class="hero">
+  <div class="hero-badge"><i class="ti ti-bolt" style="font-size:12px;" aria-hidden="true"></i> 已更新至 v44.0</div>
+  <h1>BTD6 中文攻略<br>从新手到黑边</h1>
+  <p>塔数据、地图打法、攻略战、Boss攻略，全面覆盖，持续更新。</p>
+  <div class="hero-actions">
+    <button class="btn-primary" onclick="sendPrompt('我是BTD6新手，怎么开始学习？')">新手入门指南 ↗</button>
+    <button class="btn-secondary" onclick="sendPrompt('帮我规划CHIMPS黑边攻略页面')">CHIMPS 黑边攻略</button>
+  </div>
+  <div class="search-bar">
+    <i class="ti ti-search" style="font-size:16px; color: var(--color-text-tertiary);" aria-hidden="true"></i>
+    <input type="text" placeholder="搜索塔、地图、攻略…" />
+    <span style="font-size:12px; color: var(--color-text-tertiary);">⌘K</span>
+  </div>
+</div>
+
+<div style="height: 2.5rem;"></div>
+
+<div class="ct-banner">
+  <div class="ct-left">
+    <div class="ct-icon"><i class="ti ti-map" aria-hidden="true"></i></div>
+    <div>
+      <div class="ct-title">攻略战 · 第 58 期进行中</div>
+      <div class="ct-sub">本期遗物：Fortifried · Extra Empowered · Marching Boots</div>
+    </div>
+  </div>
+  <div class="ct-countdown">
+    <div class="ct-time"><div class="num">03</div><div class="lbl">天</div></div>
+    <div class="ct-sep">:</div>
+    <div class="ct-time"><div class="num">14</div><div class="lbl">时</div></div>
+    <div class="ct-sep">:</div>
+    <div class="ct-time"><div class="num">22</div><div class="lbl">分</div></div>
+    <button class="btn-primary" style="margin-left: 8px;" onclick="sendPrompt('BTD6攻略战第58期怎么打，遗物是Fortifried Extra Empowered Marching Boots')">查看攻略 ↗</button>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-label">快速导航</div>
+  <div class="grid-4">
+    <div class="quick-card" onclick="sendPrompt('帮我规划塔数据库页面')">
+      <div class="icon"><i class="ti ti-tower" aria-hidden="true"></i></div>
+      <h3>塔数据库</h3>
+      <p>升级路线、伤害、费用对比</p>
+    </div>
+    <div class="quick-card" onclick="sendPrompt('帮我规划英雄页面')">
+      <div class="icon"><i class="ti ti-user-star" aria-hidden="true"></i></div>
+      <h3>英雄指南</h3>
+      <p>技能详解与使用场景</p>
+    </div>
+    <div class="quick-card" onclick="sendPrompt('帮我规划地图攻略页面')">
+      <div class="icon"><i class="ti ti-map-2" aria-hidden="true"></i></div>
+      <h3>地图攻略</h3>
+      <p>每张图的最优布防</p>
+    </div>
+    <div class="quick-card" onclick="sendPrompt('帮我规划Boss攻略页面')">
+      <div class="icon"><i class="ti ti-skull" aria-hidden="true"></i></div>
+      <h3>Boss 攻略</h3>
+      <p>Ranked模式最优策略</p>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; margin-bottom: 2.5rem;">
+
+  <div>
+    <div class="section-label">最新攻略</div>
+    <div class="feature-card" style="margin-bottom: 10px;" onclick="sendPrompt('怎么在CHIMPS模式完成Bloonarius攻略？')">
+      <div class="feature-top">
+        <div>
+          <h3>Bloonarius T5 CHIMPS 通关思路</h3>
+          <p>无农场限制下的最优攻击组合与时间线</p>
+        </div>
+        <span class="badge badge-hot">热门</span>
+      </div>
+    </div>
+    <div class="feature-card" style="margin-bottom: 10px;" onclick="sendPrompt('BTD6攻略战遗物优先级怎么判断？')">
+      <div class="feature-top">
+        <div>
+          <h3>攻略战遗物优先级完全指南</h3>
+          <p>哪些遗物值得消耗票券，哪些可以跳过</p>
+        </div>
+        <span class="badge badge-event">CT</span>
+      </div>
+    </div>
+    <div class="feature-card" onclick="sendPrompt('BTD6 v44更新了什么，对阵容有什么影响？')">
+      <div class="feature-top">
+        <div>
+          <h3>v44.0 版本更新解读</h3>
+          <p>冰猴强化、农场削弱后的阵容调整建议</p>
+        </div>
+        <span class="badge badge-new">新</span>
+      </div>
+    </div>
+  </div>
+
+  <div>
+    <div class="section-label">英雄 Tier List</div>
+    <div class="tier-row" onclick="sendPrompt('Sauda为什么是BTD6最强英雄，怎么用？')">
+      <div class="tier-badge tier-s">S</div>
+      <div class="tier-name">Sauda</div>
+      <div class="tier-desc">前期最强清怪，几乎通用</div>
+    </div>
+    <div class="tier-row" onclick="sendPrompt('Geraldo被ban了吗？现在还能用吗？')">
+      <div class="tier-badge tier-s">S</div>
+      <div class="tier-name">Geraldo</div>
+      <div class="tier-desc">道具强度极高，CT部分模式限用</div>
+    </div>
+    <div class="tier-row" onclick="sendPrompt('Corvus怎么使用，技能循环是什么？')">
+      <div class="tier-badge tier-a">A</div>
+      <div class="tier-name">Corvus</div>
+      <div class="tier-desc">上限极高，需要微操</div>
+    </div>
+    <div class="tier-row" onclick="sendPrompt('Psi适合什么场景？')">
+      <div class="tier-badge tier-a">A</div>
+      <div class="tier-name">Psi</div>
+      <div class="tier-desc">MOAB克星，后期稳定输出</div>
+    </div>
+    <div class="tier-row" onclick="sendPrompt('Quincy适合新手吗？')">
+      <div class="tier-badge tier-b">B</div>
+      <div class="tier-name">Quincy</div>
+      <div class="tier-desc">适合新手，前期强后期乏力</div>
+    </div>
+    <div style="padding-top: 10px; text-align: right;">
+      <a href="#" style="font-size: 13px; color: #D85A30; text-decoration: none;" onclick="sendPrompt('给我看完整的BTD6英雄Tier List')">查看完整 Tier List →</a>
+    </div>
+  </div>
+
+</div>
+
+<div class="divider"></div>
+
+<div class="section">
+  <div class="section-label">版本动态</div>
+  <div style="background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); padding: 0.5rem 1.25rem;">
+    <div class="news-card" onclick="sendPrompt('BTD6 v44.0冰猴有哪些改动？')">
+      <div class="news-thumb" style="background: #E6F1FB; color: #185FA5;"><i class="ti ti-snowflake" aria-hidden="true"></i></div>
+      <div>
+        <div class="news-title">冰猴 2-0-5 强化，新增抗冻属性穿透</div>
+        <div class="news-meta">v44.0 · 2天前</div>
+      </div>
+    </div>
+    <div class="news-card" onclick="sendPrompt('BTD6农场被削了吗？影响收益吗？')">
+      <div class="news-thumb" style="background: #EAF3DE; color: #3B6D11;"><i class="ti ti-plant" aria-hidden="true"></i></div>
+      <div>
+        <div class="news-title">香蕉农场 4-2-0 收益微调，影响CHIMPS</div>
+        <div class="news-meta">v44.0 · 2天前</div>
+      </div>
+    </div>
+    <div class="news-card" onclick="sendPrompt('攻略战第58期有什么特别规则吗？')">
+      <div class="news-thumb" style="background: #EEEDFE; color: #534AB7;"><i class="ti ti-flag" aria-hidden="true"></i></div>
+      <div>
+        <div class="news-title">攻略战第58期开启，新增地图 Glacial Trail</div>
+        <div class="news-meta">活动 · 3天前</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="footer-links">
+    <a href="#">关于</a>
+    <a href="#">投稿</a>
+    <a href="#">Discord</a>
+    <a href="#">更新日志</a>
+  </div>
+  <div class="footer-copy">BTD6攻略站 · 非官方玩家社区</div>
+</footer>
+
+</div>
