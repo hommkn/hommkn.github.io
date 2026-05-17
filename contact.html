@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Contact — BeadSnap</title>
+  <meta name="description" content="Get in touch with BeadSnap. Feature requests, bug reports, or just saying hi — we read every message." />
+  <link rel="canonical" href="https://beadsnap.app/contact.html" />
+  <link rel="icon" type="image/png" href="images/favicon.png" />
+
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://beadsnap.app/contact.html" />
+  <meta property="og:title" content="Contact — BeadSnap" />
+  <meta property="og:description" content="Feature requests, bug reports, or just saying hi — we read every message." />
+  <meta property="og:image" content="https://beadsnap.app/images/og-image.jpg" />
+  <meta property="og:site_name" content="BeadSnap" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet" />
+
+  <style>
+    :root {
+      --bg-cream:#FAF6F0;--bg-cream-soft:#F4EEE4;--coral:#FF7B6B;--coral-dark:#E85F4E;
+      --teal:#5BA8A0;--teal-dark:#4A8F88;--ink:#3A3530;--ink-soft:#6B635C;--line:#E5DDD0;
+      --shadow:0 6px 24px rgba(58,53,48,.08);--radius:16px;--radius-sm:10px;
+    }
+    *,*::before,*::after{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{margin:0;font-family:'Nunito',-apple-system,BlinkMacSystemFont,sans-serif;font-weight:400;color:var(--ink);background-color:var(--bg-cream);background-image:linear-gradient(rgba(58,53,48,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(58,53,48,.04) 1px,transparent 1px);background-size:24px 24px;line-height:1.6;-webkit-font-smoothing:antialiased}
+    h1,h2,h3{font-weight:800;line-height:1.2;margin:0 0 .5em}
+    h1{font-size:clamp(2rem,5vw,3.2rem)}h2{font-size:clamp(1.3rem,3vw,1.8rem)}h3{font-size:1.2rem}
+    p{margin:0 0 1em;color:var(--ink-soft)}
+    a{color:var(--coral-dark);text-decoration:none}a:hover{text-decoration:underline}
+    button:focus-visible,input:focus-visible,textarea:focus-visible,a:focus-visible,[tabindex]:focus-visible{outline:3px solid var(--teal);outline-offset:3px}
+    .container{max-width:1100px;margin:0 auto;padding:0 24px}
+
+    header.site-header{padding:16px 0;border-bottom:1px solid var(--line);background:rgba(250,246,240,.85);backdrop-filter:blur(8px);position:sticky;top:0;z-index:50}
+    .site-header .container{display:flex;align-items:center;gap:14px}
+    .logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:1.5rem;color:var(--ink);text-decoration:none}
+    .logo:hover{text-decoration:none}
+    .logo-icon{width:36px;height:36px;border-radius:50%;background:var(--coral);display:inline-flex;align-items:center;justify-content:center;box-shadow:inset 0 -3px 0 rgba(0,0,0,.08)}
+    .logo-icon::after{content:'';width:12px;height:12px;border-radius:50%;background:var(--bg-cream)}
+    .site-nav{margin-left:auto;display:flex;gap:6px;align-items:center}
+    .site-nav a{padding:6px 14px;border-radius:999px;font-weight:700;font-size:.9rem;color:var(--ink-soft);transition:background .15s,color .15s;text-decoration:none}
+    .site-nav a:hover,.site-nav a.is-active{background:var(--coral);color:#fff;text-decoration:none}
+    @media(max-width:580px){.site-nav a{padding:6px 10px;font-size:.82rem}}
+
+    .page-content{padding:64px 0 80px}
+    .page-content .container{max-width:640px}
+    .page-content h1{margin-bottom:16px}
+    .page-content p{font-size:1.05rem;line-height:1.7}
+
+    .email-highlight{display:inline-flex;align-items:center;gap:10px;background:#fff;border:2px solid var(--line);border-radius:var(--radius-sm);padding:14px 24px;font-size:1.1rem;font-weight:700;margin:8px 0 40px;transition:border-color .15s,box-shadow .15s}
+    .email-highlight:hover{border-color:var(--coral);box-shadow:var(--shadow);text-decoration:none}
+    .email-highlight span{font-size:1.3rem}
+
+    /* CONTACT FORM */
+    .contact-form{background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);padding:32px}
+    .contact-form h2{margin-bottom:24px}
+    .form-group{margin-bottom:20px}
+    .form-group label{display:block;font-weight:700;margin-bottom:6px;font-size:.95rem}
+    .form-group input,
+    .form-group textarea{
+      width:100%;padding:12px 16px;border:2px solid var(--line);border-radius:var(--radius-sm);
+      font-family:inherit;font-size:1rem;color:var(--ink);background:var(--bg-cream);
+      transition:border-color .15s,box-shadow .15s;resize:vertical
+    }
+    .form-group input:focus,
+    .form-group textarea:focus{
+      border-color:var(--teal);box-shadow:0 0 0 3px rgba(91,168,160,.15);outline:none
+    }
+    .form-group textarea{min-height:140px}
+
+    .btn{display:inline-flex;align-items:center;gap:8px;padding:14px 28px;border:none;border-radius:999px;font-family:inherit;font-weight:700;font-size:1rem;cursor:pointer;transition:transform .15s,box-shadow .15s,background .15s;min-height:48px}
+    .btn-primary{background:var(--coral);color:#fff;box-shadow:0 4px 0 var(--coral-dark)}
+    .btn-primary:hover{background:var(--coral-dark);transform:translateY(-2px);box-shadow:0 6px 0 var(--coral-dark)}
+    .btn-primary:active{transform:translateY(2px);box-shadow:0 0 0 var(--coral-dark)}
+
+    footer.site-footer{background:var(--ink);color:var(--bg-cream);padding:40px 0;text-align:center}
+    footer.site-footer a{color:var(--bg-cream)}
+    footer.site-footer p{color:rgba(250,246,240,.7);margin-bottom:8px}
+    .footer-links{display:flex;gap:24px;justify-content:center;margin-bottom:16px;flex-wrap:wrap}
+  </style>
+</head>
+
+<body>
+
+  <header class="site-header" role="banner">
+    <div class="container">
+      <a href="index.html" class="logo" aria-label="BeadSnap home">
+        <span class="logo-icon" aria-hidden="true"></span>
+        <span>BeadSnap</span>
+      </a>
+      <nav class="site-nav" aria-label="Main navigation">
+        <a href="index.html">Home</a>
+        <a href="about.html">About</a>
+        <a href="privacy.html">Privacy</a>
+        <a href="contact.html" class="is-active">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="page-content">
+    <div class="container">
+
+      <h1>Contact BeadSnap</h1>
+
+      <p>Got a feature request, found a bug, or just want to say hi? I read every message.</p>
+
+      <a href="mailto:contact@beadsnap.app" class="email-highlight">
+        <span aria-hidden="true">✉️</span> contact@beadsnap.app
+      </a>
+
+      <!--
+        ============================================================
+        FORM BACKEND INTEGRATION NOTES
+        ============================================================
+        This form currently has no backend. To make it functional,
+        choose one of these options:
+
+        Option 1 — Formspree (easiest, free tier available):
+          Change the form's action to:
+            action="https://formspree.io/f/YOUR_FORM_ID"
+          Sign up at https://formspree.io, create a form, and
+          paste your form ID above. Submissions go to your email.
+
+        Option 2 — Netlify Forms (if hosted on Netlify):
+          Add netlify attribute to the form tag:
+            <form name="contact" method="POST" data-netlify="true">
+          Submissions appear in Netlify dashboard.
+
+        Option 3 — Custom backend:
+          Set the form action to your own endpoint, e.g.:
+            action="https://api.beadsnap.app/contact"
+          Handle the POST on your server / serverless function.
+
+        Option 4 — GitHub Pages + Google Forms:
+          Create a Google Form, copy the pre-filled URL, and
+          redirect form submission to it via JavaScript.
+        ============================================================
+      -->
+
+      <div class="contact-form">
+        <h2>Send a message</h2>
+        <div class="form-group">
+          <label for="contact-name">Name</label>
+          <input type="text" id="contact-name" name="name" placeholder="Your name" autocomplete="name" required />
+        </div>
+        <div class="form-group">
+          <label for="contact-email">Email</label>
+          <input type="email" id="contact-email" name="email" placeholder="you@example.com" autocomplete="email" required />
+        </div>
+        <div class="form-group">
+          <label for="contact-message">Message</label>
+          <textarea id="contact-message" name="message" placeholder="What's on your mind?" required></textarea>
+        </div>
+        <button type="button" class="btn btn-primary" id="contact-submit">Send message →</button>
+      </div>
+
+    </div>
+  </main>
+
+  <footer class="site-footer" role="contentinfo">
+    <div class="container">
+      <div class="footer-links">
+        <a href="about.html">About</a>
+        <a href="privacy.html">Privacy</a>
+        <a href="contact.html">Contact</a>
+        <a href="mailto:contact@beadsnap.app">contact@beadsnap.app</a>
+      </div>
+      <p>&copy; <span id="year"></span> BeadSnap. Made with patience and a lot of tiny plastic beads.</p>
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // Placeholder submit handler — replace with real form backend (see HTML comment above)
+    document.getElementById('contact-submit').addEventListener('click', function() {
+      const name = document.getElementById('contact-name').value.trim();
+      const email = document.getElementById('contact-email').value.trim();
+      const message = document.getElementById('contact-message').value.trim();
+
+      if (!name || !email || !message) {
+        alert('Please fill in all fields before sending.');
+        return;
+      }
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        alert('Please enter a valid email address.');
+        return;
+      }
+
+      // For now, open the default mail client as a fallback
+      const subject = encodeURIComponent('BeadSnap contact: ' + name);
+      const body = encodeURIComponent('From: ' + name + ' (' + email + ')\n\n' + message);
+      window.location.href = 'mailto:contact@beadsnap.app?subject=' + subject + '&body=' + body;
+    });
+  </script>
+</body>
+</html>

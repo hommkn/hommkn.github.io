@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BeadSnap — Free Photo to Perler Bead Pattern Maker</title>
+  <meta name="description" content="Turn any photo into a Perler bead pattern for free. Runs entirely in your browser — your images never leave your device. Perfect for crafters and parents." />
+  <meta name="keywords" content="perler bead pattern, photo to bead, pixel art, fuse bead, hama bead, crafting tool, free pattern maker" />
+  <meta name="author" content="BeadSnap" />
+  <link rel="canonical" href="https://beadsnap.app/" />
+  <link rel="icon" type="image/png" href="images/favicon.png" />
+
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://beadsnap.app/" />
+  <meta property="og:title" content="BeadSnap — Free Photo to Perler Bead Pattern Maker" />
+  <meta property="og:description" content="Turn any photo into a Perler bead pattern for free. Runs entirely in your browser — your images never leave your device." />
+  <meta property="og:image" content="https://beadsnap.app/images/og-image.jpg" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:site_name" content="BeadSnap" />
+
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:url" content="https://beadsnap.app/" />
+  <meta name="twitter:title" content="BeadSnap — Free Photo to Perler Bead Pattern Maker" />
+  <meta name="twitter:description" content="Turn any photo into a Perler bead pattern for free. Runs entirely in your browser." />
+  <meta name="twitter:image" content="https://beadsnap.app/images/og-image.jpg" />
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "BeadSnap",
+    "url": "https://beadsnap.app/",
+    "description": "Free browser-based tool to convert photos into Perler bead patterns. Images are processed locally for privacy.",
+    "applicationCategory": "DesignApplication",
+    "operatingSystem": "Any (web browser)",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+    "author": { "@type": "Person", "name": "Chen" }
+  }
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet" />
+
+  <style>
+    :root {
+      --bg-cream:#FAF6F0;--bg-cream-soft:#F4EEE4;--coral:#FF7B6B;--coral-dark:#E85F4E;
+      --teal:#5BA8A0;--teal-dark:#4A8F88;--ink:#3A3530;--ink-soft:#6B635C;--line:#E5DDD0;
+      --shadow:0 6px 24px rgba(58,53,48,.08);--shadow-hover:0 10px 32px rgba(58,53,48,.14);
+      --radius:16px;--radius-sm:10px;
+    }
+    *,*::before,*::after{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{margin:0;font-family:'Nunito',-apple-system,BlinkMacSystemFont,sans-serif;font-weight:400;color:var(--ink);background-color:var(--bg-cream);background-image:linear-gradient(rgba(58,53,48,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(58,53,48,.04) 1px,transparent 1px);background-size:24px 24px;line-height:1.6;-webkit-font-smoothing:antialiased}
+    h1,h2,h3{font-weight:800;line-height:1.2;margin:0 0 .5em}
+    h1{font-size:clamp(2rem,5vw,3.2rem)}h2{font-size:clamp(1.5rem,3.5vw,2.2rem)}h3{font-size:1.2rem}
+    p{margin:0 0 1em;color:var(--ink-soft)}
+    a{color:var(--coral-dark);text-decoration:none}a:hover{text-decoration:underline}
+    button:focus-visible,input:focus-visible,textarea:focus-visible,a:focus-visible,[tabindex]:focus-visible{outline:3px solid var(--teal);outline-offset:3px}
+    .container{max-width:1100px;margin:0 auto;padding:0 24px}
+
+    /* HEADER */
+    header.site-header{padding:16px 0;border-bottom:1px solid var(--line);background:rgba(250,246,240,.85);backdrop-filter:blur(8px);position:sticky;top:0;z-index:50}
+    .site-header .container{display:flex;align-items:center;gap:14px}
+    .logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:1.5rem;color:var(--ink);text-decoration:none}
+    .logo:hover{text-decoration:none}
+    .logo-icon{width:36px;height:36px;border-radius:50%;background:var(--coral);display:inline-flex;align-items:center;justify-content:center;box-shadow:inset 0 -3px 0 rgba(0,0,0,.08)}
+    .logo-icon::after{content:'';width:12px;height:12px;border-radius:50%;background:var(--bg-cream)}
+    .site-nav{margin-left:auto;display:flex;gap:6px;align-items:center}
+    .site-nav a{padding:6px 14px;border-radius:999px;font-weight:700;font-size:.9rem;color:var(--ink-soft);transition:background .15s,color .15s;text-decoration:none}
+    .site-nav a:hover,.site-nav a.is-active{background:var(--coral);color:#fff;text-decoration:none}
+    @media(max-width:580px){.site-nav a{padding:6px 10px;font-size:.82rem}}
+
+    /* HERO */
+    .hero{padding:64px 0 40px;text-align:center}
+    .hero h1{max-width:720px;margin-left:auto;margin-right:auto}
+    .hero h1 .accent{color:var(--coral)}
+    .hero p.lead{font-size:1.15rem;max-width:580px;margin:0 auto 32px}
+    .hero-cta{display:inline-flex;gap:12px;flex-wrap:wrap;justify-content:center}
+    .hero-demo{margin:48px auto 0;max-width:760px}
+    .hero-demo img{width:100%;border-radius:var(--radius);box-shadow:var(--shadow);display:block;background:var(--bg-cream-soft)}
+
+    /* BUTTONS */
+    .btn{display:inline-flex;align-items:center;gap:8px;padding:14px 28px;border:none;border-radius:999px;font-family:inherit;font-weight:700;font-size:1rem;cursor:pointer;transition:transform .15s,box-shadow .15s,background .15s;min-height:48px}
+    .btn-primary{background:var(--coral);color:#fff;box-shadow:0 4px 0 var(--coral-dark)}
+    .btn-primary:hover{background:var(--coral-dark);transform:translateY(-2px);box-shadow:0 6px 0 var(--coral-dark)}
+    .btn-primary:active{transform:translateY(2px);box-shadow:0 0 0 var(--coral-dark)}
+    .btn-secondary{background:#fff;color:var(--ink);border:2px solid var(--line)}
+    .btn-secondary:hover{border-color:var(--teal);color:var(--teal-dark)}
+
+    /* EXAMPLES */
+    .examples-section{padding:40px 0;text-align:center}
+    .examples-section h2{margin-bottom:8px}
+    .examples-section .subtitle{margin-bottom:28px}
+    .examples-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:20px;max-width:720px;margin:0 auto}
+    .example-thumb{cursor:pointer;border-radius:var(--radius-sm);overflow:hidden;border:3px solid transparent;background:#fff;padding:0;transition:transform .2s,border-color .15s,box-shadow .2s;box-shadow:var(--shadow);text-align:center}
+    .example-thumb:hover{transform:translateY(-4px) scale(1.03);border-color:var(--coral);box-shadow:var(--shadow-hover)}
+    .example-thumb img{width:100%;aspect-ratio:1/1;object-fit:cover;display:block}
+    .example-caption{padding:8px 6px;font-size:.85rem;font-weight:700;color:var(--ink-soft)}
+
+    /* TOOL AREA */
+    .tool-section{padding:40px 0 60px}
+    .tool-card{background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);padding:32px}
+    @media(max-width:600px){.tool-card{padding:20px}}
+    .dropzone{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;border:3px dashed var(--line);border-radius:var(--radius);padding:56px 24px;min-height:260px;cursor:pointer;transition:border-color .15s,background .15s;background:var(--bg-cream-soft)}
+    .dropzone:hover,.dropzone.is-dragging{border-color:var(--coral);background:#FFF1EE}
+    .dropzone-icon{font-size:3rem;margin-bottom:12px;line-height:1}
+    .dropzone h3{color:var(--ink);margin:0 0 6px}
+    .dropzone p{margin:0 0 16px;max-width:420px}
+    .dropzone .btn{pointer-events:none}
+    .visually-hidden-file{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+    .preview-area{display:none}.preview-area.is-active{display:block}
+    .preview-wrapper{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:24px}
+    @media(max-width:700px){.preview-wrapper{grid-template-columns:1fr}}
+    .preview-col{text-align:center}
+    .preview-col h4{font-size:.85rem;font-weight:700;color:var(--ink-soft);text-transform:uppercase;letter-spacing:.08em;margin:0 0 12px}
+    .preview-col canvas,.preview-col img{max-width:100%;height:auto;border-radius:var(--radius-sm);background:var(--bg-cream-soft);display:block;margin:0 auto}
+    #output-canvas{image-rendering:pixelated;image-rendering:-moz-crisp-edges;image-rendering:crisp-edges}
+
+    /* BEAD SUMMARY */
+    .bead-summary{background:var(--bg-cream-soft);border-radius:var(--radius);padding:20px 24px;margin-bottom:20px}
+    .bead-summary-header{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:14px;flex-wrap:wrap}
+    .bead-summary-header h4{font-size:.85rem;font-weight:700;color:var(--ink-soft);text-transform:uppercase;letter-spacing:.08em;margin:0}
+    .bead-summary-total{font-size:1rem;font-weight:800;color:var(--ink)}
+    .bead-summary-total .num{color:var(--coral)}
+    .bead-color-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:8px 16px;max-height:320px;overflow-y:auto;padding-right:4px}
+    .bead-color-row{display:flex;align-items:center;gap:10px;padding:6px 8px;border-radius:8px;transition:background .12s}
+    .bead-color-row:hover{background:#fff}
+    .bead-swatch{width:22px;height:22px;border-radius:6px;border:1.5px solid rgba(58,53,48,.18);flex-shrink:0;box-shadow:inset 0 -2px 0 rgba(0,0,0,.06)}
+    .bead-code{font-weight:800;color:var(--ink);font-size:.85rem;min-width:32px}
+    .bead-name{flex:1;font-size:.9rem;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .bead-count{font-weight:800;color:var(--coral-dark);font-size:.9rem;font-variant-numeric:tabular-nums}
+    .btn.is-copied{background:var(--teal)!important;box-shadow:0 4px 0 var(--teal-dark)!important}
+
+    /* CONTROLS */
+    .controls{background:var(--bg-cream-soft);border-radius:var(--radius);padding:20px 24px;margin-bottom:20px}
+    .control-row{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+    .control-row label{font-weight:700;min-width:120px}
+    .control-row .value-badge{background:var(--coral);color:#fff;padding:4px 12px;border-radius:999px;font-weight:700;font-size:.9rem;min-width:72px;text-align:center}
+    input[type="range"]{flex:1;min-width:160px;-webkit-appearance:none;appearance:none;height:8px;background:var(--line);border-radius:999px;outline:none;cursor:pointer}
+    input[type="range"]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:24px;height:24px;background:var(--coral);border-radius:50%;cursor:pointer;border:3px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,.15)}
+    input[type="range"]::-moz-range-thumb{width:24px;height:24px;background:var(--coral);border-radius:50%;cursor:pointer;border:3px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,.15)}
+    .action-row{display:flex;gap:12px;flex-wrap:wrap;justify-content:center}
+
+    /* HOW IT WORKS */
+    .steps-section{padding:60px 0;background:var(--bg-cream-soft);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+    .steps-section h2{text-align:center;margin-bottom:40px}
+    .steps-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:24px}
+    .step{text-align:center;padding:24px;background:#fff;border-radius:var(--radius);box-shadow:var(--shadow)}
+    .step-icon{width:56px;height:56px;margin:0 auto 16px;background:var(--coral);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.6rem;font-weight:800}
+    .step:nth-child(2) .step-icon{background:var(--teal)}
+    .step:nth-child(3) .step-icon{background:var(--ink)}
+
+    /* STORY */
+    .story-section{padding:64px 0;text-align:center}
+    .story-section .container{max-width:680px}
+    .story-section .privacy-badge{display:inline-flex;align-items:center;gap:8px;background:var(--teal);color:#fff;padding:8px 16px;border-radius:999px;font-weight:700;font-size:.9rem;margin-top:16px}
+
+    /* FOOTER */
+    footer.site-footer{background:var(--ink);color:var(--bg-cream);padding:40px 0;text-align:center}
+    footer.site-footer a{color:var(--bg-cream)}
+    footer.site-footer p{color:rgba(250,246,240,.7);margin-bottom:8px}
+    .footer-links{display:flex;gap:24px;justify-content:center;margin-bottom:16px;flex-wrap:wrap}
+
+    .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+  </style>
+</head>
+
+<body>
+
+  <header class="site-header" role="banner">
+    <div class="container">
+      <a href="index.html" class="logo" aria-label="BeadSnap home">
+        <span class="logo-icon" aria-hidden="true"></span>
+        <span>BeadSnap</span>
+      </a>
+      <nav class="site-nav" aria-label="Main navigation">
+        <a href="index.html" class="is-active">Home</a>
+        <a href="about.html">About</a>
+        <a href="privacy.html">Privacy</a>
+        <a href="contact.html">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+
+    <section class="hero">
+      <div class="container">
+        <h1>Turn any photo into a <span class="accent">Perler bead</span> pattern</h1>
+        <p class="lead">Free, fun, and friendly. Upload a photo and BeadSnap instantly turns it into a pixel-perfect bead pattern you can craft at home with your kids.</p>
+        <div class="hero-cta">
+          <a href="#tool" class="btn btn-primary">Get started — it's free</a>
+          <a href="#how-it-works" class="btn btn-secondary">See how it works</a>
+        </div>
+        <div class="hero-demo">
+          <img src="images/hero-demo.jpg" alt="BeadSnap before and after — photo turned into Perler bead pattern" loading="lazy" width="760" height="400" />
+        </div>
+      </div>
+    </section>
+
+    <section class="examples-section" aria-labelledby="examples-heading">
+      <div class="container">
+        <h2 id="examples-heading">Try with an example</h2>
+        <p class="subtitle">No photo handy? Tap any of these to see BeadSnap in action.</p>
+        <div class="examples-grid">
+          <button class="example-thumb" data-src="images/example-1.jpg" aria-label="Try portrait example">
+            <img src="images/example-1.jpg" alt="Child portrait perler bead pattern example" loading="lazy" />
+            <div class="example-caption">Portrait</div>
+          </button>
+          <button class="example-thumb" data-src="images/example-2.jpg" aria-label="Try flower example">
+            <img src="images/example-2.jpg" alt="Flower perler bead pattern example" loading="lazy" />
+            <div class="example-caption">Flower</div>
+          </button>
+          <button class="example-thumb" data-src="images/example-3.jpg" aria-label="Try icon example">
+            <img src="images/example-3.jpg" alt="Simple icon perler bead pattern example" loading="lazy" />
+            <div class="example-caption">Icon</div>
+          </button>
+          <button class="example-thumb" data-src="images/example-4.jpg" aria-label="Try character example">
+            <img src="images/example-4.jpg" alt="Pixel character perler bead pattern example" loading="lazy" />
+            <div class="example-caption">Character</div>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <section class="tool-section" id="tool" aria-labelledby="tool-heading">
+      <div class="container">
+        <h2 id="tool-heading" class="sr-only">Photo to Perler Bead converter tool</h2>
+        <div class="tool-card">
+          <div class="dropzone" id="dropzone" tabindex="0" role="button" aria-label="Upload an image by clicking or dragging a file here">
+            <span class="dropzone-icon" aria-hidden="true">🎨</span>
+            <h3>Drop a photo here</h3>
+            <p>or click to choose from your device — PNG, JPG, or WebP</p>
+            <span class="btn btn-primary" aria-hidden="true">Choose a photo</span>
+          </div>
+          <input type="file" id="file-input" class="visually-hidden-file" accept="image/png,image/jpeg,image/webp" aria-label="Upload an image file" />
+
+          <div class="preview-area" id="preview-area" aria-live="polite">
+            <div class="preview-wrapper">
+              <div class="preview-col">
+                <h4>Original</h4>
+                <img id="original-preview" alt="Original uploaded image" />
+              </div>
+              <div class="preview-col">
+                <h4>Bead pattern</h4>
+                <canvas id="output-canvas" aria-label="Generated Perler bead pattern preview"></canvas>
+              </div>
+            </div>
+            <div class="controls">
+              <div class="control-row">
+                <label for="size-slider">Pattern size</label>
+                <input type="range" id="size-slider" min="16" max="128" value="48" step="1" aria-label="Pixel grid size, in beads per side" />
+                <span class="value-badge"><span id="size-value">48</span> beads</span>
+              </div>
+            </div>
+            <div class="bead-summary" id="bead-summary" aria-live="polite">
+              <div class="bead-summary-header">
+                <h4>Bead count</h4>
+                <div class="bead-summary-total">Total: <span class="num" id="total-beads">0</span> beads</div>
+              </div>
+              <div class="bead-color-list" id="bead-color-list" role="list"></div>
+            </div>
+            <div class="action-row">
+              <button class="btn btn-primary" id="download-btn">⬇ Download PNG</button>
+              <button class="btn btn-secondary" id="copy-list-btn">📋 Copy shopping list</button>
+              <button class="btn btn-secondary" id="reset-btn">↺ Try another photo</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="steps-section" id="how-it-works" aria-labelledby="steps-heading">
+      <div class="container">
+        <h2 id="steps-heading">How it works</h2>
+        <div class="steps-grid">
+          <div class="step">
+            <div class="step-icon" aria-hidden="true">1</div>
+            <h3>Upload</h3>
+            <p>Drop in a photo or pick one from your device. Anything bright and bold works best.</p>
+          </div>
+          <div class="step">
+            <div class="step-icon" aria-hidden="true">2</div>
+            <h3>Adjust</h3>
+            <p>Slide the size control to set how detailed your bead pattern should be — from chunky to intricate.</p>
+          </div>
+          <div class="step">
+            <div class="step-icon" aria-hidden="true">3</div>
+            <h3>Download</h3>
+            <p>Save your pattern as a PNG. Print it, prop it up next to your pegboard, and start beading.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="story-section" aria-labelledby="story-heading">
+      <div class="container">
+        <h2 id="story-heading">A little tool, built with love</h2>
+        <p>I'm a dad who built BeadSnap on weekend afternoons so my kids and I could turn our favorite photos into bead crafts at the kitchen table. No ads, no signups, no nonsense — just a tiny tool that hopefully sparks a few rainy-day art sessions in your home too.</p>
+        <div class="privacy-badge" role="note">🔒 Your photos never leave your browser — everything runs locally for your privacy.</div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="site-footer" role="contentinfo">
+    <div class="container">
+      <div class="footer-links">
+        <a href="about.html">About</a>
+        <a href="privacy.html">Privacy</a>
+        <a href="contact.html">Contact</a>
+        <a href="mailto:contact@beadsnap.app">contact@beadsnap.app</a>
+      </div>
+      <p>&copy; <span id="year"></span> BeadSnap. Made with patience and a lot of tiny plastic beads.</p>
+    </div>
+  </footer>
+
+  <script>
+    const dropzone=document.getElementById('dropzone'),fileInput=document.getElementById('file-input'),previewArea=document.getElementById('preview-area'),originalPreview=document.getElementById('original-preview'),outputCanvas=document.getElementById('output-canvas'),sizeSlider=document.getElementById('size-slider'),sizeValue=document.getElementById('size-value'),downloadBtn=document.getElementById('download-btn'),copyListBtn=document.getElementById('copy-list-btn'),resetBtn=document.getElementById('reset-btn'),exampleThumbs=document.querySelectorAll('.example-thumb'),totalBeadsEl=document.getElementById('total-beads'),beadColorListEl=document.getElementById('bead-color-list');
+    let sourceImage=null,lastCountsByCode=new Map();
+    document.getElementById('year').textContent=new Date().getFullYear();
+
+    const PERLER_PALETTE=[
+      {code:'P01',name:'White',hex:'#FFFFFF'},{code:'P02',name:'Cream',hex:'#F5EEDC'},
+      {code:'P03',name:'Light Pink',hex:'#FFC0CB'},{code:'P04',name:'Bubblegum Pink',hex:'#FF77A8'},
+      {code:'P05',name:'Pink',hex:'#FF69B4'},{code:'P06',name:'Magenta',hex:'#C71585'},
+      {code:'P07',name:'Red',hex:'#ED1C24'},{code:'P08',name:'Cranapple',hex:'#B22222'},
+      {code:'P09',name:'Orange',hex:'#FF7F00'},{code:'P10',name:'Cheddar',hex:'#FFA500'},
+      {code:'P11',name:'Yellow',hex:'#FFEB3B'},{code:'P12',name:'Pastel Yellow',hex:'#FFF59D'},
+      {code:'P13',name:'Lime Green',hex:'#B5E61D'},{code:'P14',name:'Kiwi Lime',hex:'#8CC63F'},
+      {code:'P15',name:'Light Green',hex:'#7BC678'},{code:'P16',name:'Green',hex:'#22B14C'},
+      {code:'P17',name:'Dark Green',hex:'#006837'},{code:'P18',name:'Toothpaste',hex:'#99D9EA'},
+      {code:'P19',name:'Pastel Blue',hex:'#B3D9FF'},{code:'P20',name:'Light Blue',hex:'#3FA9F5'},
+      {code:'P21',name:'Blue',hex:'#0066CC'},{code:'P22',name:'Dark Blue',hex:'#1B1464'},
+      {code:'P23',name:'Periwinkle',hex:'#8B8FE0'},{code:'P24',name:'Purple',hex:'#662D91'},
+      {code:'P25',name:'Plum',hex:'#800080'},{code:'P26',name:'Lavender',hex:'#B695C0'},
+      {code:'P27',name:'Tan',hex:'#D4A373'},{code:'P28',name:'Light Brown',hex:'#A0522D'},
+      {code:'P29',name:'Brown',hex:'#6F4E37'},{code:'P30',name:'Dark Brown',hex:'#3E2723'},
+      {code:'P31',name:'Gray',hex:'#808080'},{code:'P32',name:'Light Gray',hex:'#C0C0C0'},
+      {code:'P33',name:'Dark Gray',hex:'#404040'},{code:'P34',name:'Black',hex:'#000000'},
+      {code:'P35',name:'Peach',hex:'#FFCBA4'},{code:'P36',name:'Light Tan',hex:'#F5DEB3'},
+      {code:'P37',name:'Hot Coral',hex:'#FF6F61'},{code:'P38',name:'Sand',hex:'#C2B280'}
+    ];
+    PERLER_PALETTE.forEach(p=>{p.r=parseInt(p.hex.slice(1,3),16);p.g=parseInt(p.hex.slice(3,5),16);p.b=parseInt(p.hex.slice(5,7),16)});
+    const PALETTE_BY_CODE=new Map(PERLER_PALETTE.map(p=>[p.code,p]));
+
+    const nearestCache=new Map();
+    function nearestPerlerColor(r,g,b){
+      const key=(r<<16)|(g<<8)|b;
+      const hit=nearestCache.get(key);
+      if(hit!==undefined)return hit;
+      let bestIdx=0,bestDist=Infinity;
+      for(let i=0;i<PERLER_PALETTE.length;i++){
+        const p=PERLER_PALETTE[i],dr=r-p.r,dg=g-p.g,db=b-p.b;
+        const d=dr*dr*3+dg*dg*4+db*db*2;
+        if(d<bestDist){bestDist=d;bestIdx=i}
+      }
+      nearestCache.set(key,bestIdx);return bestIdx;
+    }
+
+    function preventDefaults(e){e.preventDefault();e.stopPropagation()}
+    ['dragenter','dragover'].forEach(evt=>{dropzone.addEventListener(evt,e=>{preventDefaults(e);dropzone.classList.add('is-dragging')})});
+    ['dragleave','drop'].forEach(evt=>{dropzone.addEventListener(evt,e=>{preventDefaults(e);dropzone.classList.remove('is-dragging')})});
+    dropzone.addEventListener('drop',e=>{const f=e.dataTransfer.files&&e.dataTransfer.files[0];if(f)handleFile(f)});
+    dropzone.addEventListener('click',()=>{fileInput.click()});
+    dropzone.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();fileInput.click()}});
+    fileInput.addEventListener('change',e=>{const f=e.target.files&&e.target.files[0];if(f)handleFile(f)});
+
+    function handleFile(file){
+      if(!file.type.startsWith('image/')){alert('Please upload an image file (PNG, JPG, or WebP).');return}
+      const reader=new FileReader();
+      reader.onload=e=>loadImageFromSrc(e.target.result);
+      reader.readAsDataURL(file);
+    }
+    function loadImageFromSrc(src){
+      const img=new Image();
+      img.crossOrigin='anonymous';
+      img.onload=()=>{sourceImage=img;originalPreview.src=src;previewArea.classList.add('is-active');renderPattern();previewArea.scrollIntoView({behavior:'smooth',block:'start'})};
+      img.onerror=()=>{alert('Sorry, we could not load that image. Please try another.')};
+      img.src=src;
+    }
+
+    exampleThumbs.forEach(thumb=>{thumb.addEventListener('click',()=>{const src=thumb.getAttribute('data-src');if(src)loadImageFromSrc(src)})});
+
+    sizeSlider.addEventListener('input',()=>{sizeValue.textContent=sizeSlider.value;if(sourceImage)renderPattern()});
+
+    function renderPattern(){
+      if(!sourceImage)return;
+      const beadsPerSide=parseInt(sizeSlider.value,10);
+      const aspect=sourceImage.naturalWidth/sourceImage.naturalHeight;
+      let gridW,gridH;
+      if(aspect>=1){gridW=beadsPerSide;gridH=Math.max(1,Math.round(beadsPerSide/aspect))}
+      else{gridH=beadsPerSide;gridW=Math.max(1,Math.round(beadsPerSide*aspect))}
+
+      const tinyCanvas=document.createElement('canvas');
+      tinyCanvas.width=gridW;tinyCanvas.height=gridH;
+      const tinyCtx=tinyCanvas.getContext('2d');
+      tinyCtx.imageSmoothingEnabled=true;
+      tinyCtx.drawImage(sourceImage,0,0,gridW,gridH);
+
+      const imgData=tinyCtx.getImageData(0,0,gridW,gridH);
+      const pixels=imgData.data;
+      const beadGrid=new Uint8Array(gridW*gridH);
+      const countMap=new Map();
+      for(let i=0;i<gridW*gridH;i++){
+        const off=i*4;
+        const idx=nearestPerlerColor(pixels[off],pixels[off+1],pixels[off+2]);
+        beadGrid[i]=idx;
+        const code=PERLER_PALETTE[idx].code;
+        countMap.set(code,(countMap.get(code)||0)+1);
+      }
+      lastCountsByCode=countMap;
+
+      const CELL=16;
+      const outW=gridW*CELL,outH=gridH*CELL;
+      outputCanvas.width=outW;outputCanvas.height=outH;
+      const ctx=outputCanvas.getContext('2d');
+      ctx.imageSmoothingEnabled=false;
+
+      for(let y=0;y<gridH;y++){for(let x=0;x<gridW;x++){
+        const p=PERLER_PALETTE[beadGrid[y*gridW+x]];
+        ctx.fillStyle=p.hex;ctx.fillRect(x*CELL,y*CELL,CELL,CELL);
+      }}
+
+      ctx.strokeStyle='rgba(58,53,48,0.45)';ctx.lineWidth=1;ctx.beginPath();
+      for(let x=0;x<=gridW;x++){const px=x*CELL+0.5;ctx.moveTo(px,0);ctx.lineTo(px,outH)}
+      for(let y=0;y<=gridH;y++){const py=y*CELL+0.5;ctx.moveTo(0,py);ctx.lineTo(outW,py)}
+      ctx.stroke();
+
+      if(CELL>=24){
+        ctx.textAlign='center';ctx.textBaseline='middle';
+        ctx.font=`bold ${Math.floor(CELL*.36)}px "Nunito",sans-serif`;
+        for(let y=0;y<gridH;y++){for(let x=0;x<gridW;x++){
+          const p=PERLER_PALETTE[beadGrid[y*gridW+x]];
+          const luma=p.r*.299+p.g*.587+p.b*.114;
+          ctx.fillStyle=luma<140?'rgba(255,255,255,0.8)':'rgba(58,53,48,0.65)';
+          ctx.fillText(p.code,x*CELL+CELL/2,y*CELL+CELL/2);
+        }}
+      }
+      renderBeadSummary(countMap,gridW*gridH);
+    }
+
+    function renderBeadSummary(countMap,totalBeads){
+      totalBeadsEl.textContent=totalBeads.toLocaleString();
+      const sorted=[...countMap.entries()].sort((a,b)=>{if(b[1]!==a[1])return b[1]-a[1];return a[0].localeCompare(b[0])});
+      const frag=document.createDocumentFragment();
+      for(const[code,count]of sorted){
+        const info=PALETTE_BY_CODE.get(code);if(!info)continue;
+        const row=document.createElement('div');row.className='bead-color-row';row.setAttribute('role','listitem');
+        row.innerHTML=`<span class="bead-swatch" style="background:${info.hex}" aria-hidden="true"></span><span class="bead-code">${code}</span><span class="bead-name">${info.name}</span><span class="bead-count">× ${count.toLocaleString()}</span>`;
+        frag.appendChild(row);
+      }
+      beadColorListEl.innerHTML='';beadColorListEl.appendChild(frag);
+    }
+
+    copyListBtn.addEventListener('click',async()=>{
+      if(lastCountsByCode.size===0)return;
+      const sorted=[...lastCountsByCode.entries()].sort((a,b)=>{if(b[1]!==a[1])return b[1]-a[1];return a[0].localeCompare(b[0])});
+      const total=sorted.reduce((s,[,c])=>s+c,0);
+      const lines=sorted.map(([code,count])=>{const info=PALETTE_BY_CODE.get(code);return`- ${code} ${info?info.name:'?'}: ${count} beads`});
+      const text=`BeadSnap pattern — shopping list (${total.toLocaleString()} beads total):\n${lines.join('\n')}`;
+      try{await navigator.clipboard.writeText(text)}catch{const ta=document.createElement('textarea');ta.value=text;ta.style.cssText='position:fixed;left:-9999px';document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta)}
+      copyListBtn.classList.add('is-copied');const orig=copyListBtn.textContent;copyListBtn.textContent='✓ Copied!';
+      setTimeout(()=>{copyListBtn.classList.remove('is-copied');copyListBtn.textContent=orig},1500);
+    });
+
+    downloadBtn.addEventListener('click',()=>{
+      if(!sourceImage)return;
+      try{const link=document.createElement('a');link.download='beadsnap-pattern.png';link.href=outputCanvas.toDataURL('image/png');link.click()}
+      catch(err){alert('Could not download this image. If you loaded an example, try uploading your own photo instead.')}
+    });
+
+    resetBtn.addEventListener('click',()=>{
+      sourceImage=null;fileInput.value='';originalPreview.removeAttribute('src');
+      previewArea.classList.remove('is-active');lastCountsByCode=new Map();
+      beadColorListEl.innerHTML='';totalBeadsEl.textContent='0';
+      dropzone.scrollIntoView({behavior:'smooth',block:'center'});
+    });
+  </script>
+</body>
+</html>
