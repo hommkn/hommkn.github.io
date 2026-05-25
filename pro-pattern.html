@@ -54,10 +54,11 @@
     .preview-col img,.preview-col canvas{display:block;max-width:100%;height:auto;margin:0 auto;border-radius:var(--radius-sm);background:var(--soft)}
     #output-canvas{image-rendering:pixelated;image-rendering:crisp-edges}
     .controls{background:var(--soft);border-radius:var(--radius);padding:20px;margin-bottom:18px}
-    .control-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px}
+    .control-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:18px 24px;align-items:start}
+    .field{min-width:0}
     .field{display:grid;gap:6px}
     .field label{font-weight:800}
-    .field select{min-height:44px;border:2px solid var(--line);border-radius:10px;background:#fff;padding:0 12px;font:inherit;color:var(--ink)}
+    .field select{width:100%;min-height:44px;border:2px solid var(--line);border-radius:10px;background:#fff;padding:0 12px;font:inherit;color:var(--ink)}
     .check-row{display:flex;align-items:flex-start;gap:10px}
     .check-row input{width:22px;height:22px;margin-top:2px;accent-color:var(--coral);cursor:pointer}
     .hint{font-size:.9rem;color:var(--muted);margin:0}
@@ -79,7 +80,7 @@
     footer a{color:var(--bg)}
     footer p{color:rgba(250,246,240,.72);margin-bottom:8px}
     .footer-links{display:flex;gap:22px;justify-content:center;flex-wrap:wrap;margin-bottom:16px}
-    @media(max-width:760px){.preview-grid{grid-template-columns:1fr}.tool-card{padding:20px}nav a{padding:6px 10px;font-size:.82rem}}
+    @media(max-width:760px){.preview-grid{grid-template-columns:1fr}.control-grid{grid-template-columns:1fr}.tool-card{padding:20px}nav a{padding:6px 10px;font-size:.82rem}}
   </style>
 </head>
 <body>
@@ -91,6 +92,7 @@
         <a href="custom-pattern.html" class="is-active">Pro Pattern</a>
         <a href="free-patterns.html">Free Patterns</a>
         <a href="blog.html">Blog</a>
+        <a href="terms.html">Terms</a>
       </nav>
     </div>
   </header>
@@ -191,6 +193,7 @@
         <a href="custom-pattern.html">Pro Pattern</a>
         <a href="free-patterns.html">Free Patterns</a>
         <a href="privacy.html">Privacy</a>
+        <a href="terms.html">Terms</a>
         <a href="contact.html">Contact</a>
       </div>
       <p>&copy; <span id="year"></span> BeadSnap. Made with patience and a lot of tiny plastic beads.</p>
@@ -216,8 +219,32 @@
     function clamp(v){return Math.max(0,Math.min(255,Math.round(v)))}
     function tuneColorForBeads(r,g,b,mode){const avg=(r+g+b)/3;const sat=mode==='crisp'?1.28:mode==='soft'?1.08:1.16;const contrast=mode==='crisp'?1.12:mode==='soft'?1.02:1.06;r=avg+(r-avg)*sat;g=avg+(g-avg)*sat;b=avg+(b-avg)*sat;r=(r-128)*contrast+128;g=(g-128)*contrast+128;b=(b-128)*contrast+128;return[clamp(r),clamp(g),clamp(b)]}
     PERLER_PALETTE.forEach(p=>{p.r=parseInt(p.hex.slice(1,3),16);p.g=parseInt(p.hex.slice(3,5),16);p.b=parseInt(p.hex.slice(5,7),16);const lab=rgbToLab(p.r,p.g,p.b),hsl=rgbToHsl(p.r,p.g,p.b);p.l=lab.l;p.a=lab.a;p.labB=lab.b;p.h=hsl.h;p.s=hsl.s});
-    function colorDistanceToPalette(r,g,b,p){const lab=rgbToLab(r,g,b),hsl=rgbToHsl(r,g,b),dl=lab.l-p.l,da=lab.a-p.a,db=lab.b-p.labB;let d=dl*dl*1.15+da*da+db*db;const hueDiff=Math.abs(((hsl.h-p.h+180)%360)-180);if(hsl.s>.18&&p.s>.18)d+=hueDiff*hueDiff*.18;const inputLooksYellow=hsl.h>=34&&hsl.h<=72&&hsl.s>.22&&r>=g*.82;const candidateLooksGreen=p.code==='P13'||p.code==='P14'||p.code==='P15'||p.code==='P16'||p.code==='P17';if(inputLooksYellow&&candidateLooksGreen)d+=2600;if(hsl.l<.18&&p.code!=='P34'&&p.code!=='P33'&&p.code!=='P30')d+=900;return d}
+    function colorFamilyFromHsl(hsl){
+      if(hsl.s<.18)return'neutral';
+      const h=hsl.h;
+      if(h<18||h>=342)return'red';
+      if(h<45)return'orange';
+      if(h<72)return'yellow';
+      if(h<155)return'green';
+      if(h<205)return'cyan';
+      if(h<255)return'blue';
+      if(h<310)return'purple';
+      return'pink';
+    }
+    function paletteFamily(p){return colorFamilyFromHsl({h:p.h,s:p.s,l:p.l/100})}
+    function colorDistanceToPalette(r,g,b,p){const lab=rgbToLab(r,g,b),hsl=rgbToHsl(r,g,b),dl=lab.l-p.l,da=lab.a-p.a,db=lab.b-p.labB;let d=dl*dl*1.15+da*da+db*db;const hueDiff=Math.abs(((hsl.h-p.h+180)%360)-180);if(hsl.s>.18&&p.s>.18)d+=hueDiff*hueDiff*.18;if(hsl.s>.38&&p.s<.18)d+=1800;const inputFamily=colorFamilyFromHsl(hsl),candidateFamily=paletteFamily(p);if((inputFamily==='cyan'||inputFamily==='blue')&&hsl.s>.42&&hsl.l>.18&&candidateFamily==='neutral')d+=3200;if(hsl.l<.24&&hsl.s<.35&&(p.code==='P21'||p.code==='P22'||p.code==='P23'||p.code==='P24'||p.code==='P25'))d+=2600;const inputLooksYellow=hsl.h>=34&&hsl.h<=72&&hsl.s>.22&&r>=g*.82;const candidateLooksGreen=p.code==='P13'||p.code==='P14'||p.code==='P15'||p.code==='P16'||p.code==='P17';if(inputLooksYellow&&candidateLooksGreen)d+=2600;if(hsl.l<.18&&p.code!=='P34'&&p.code!=='P33'&&p.code!=='P30')d+=900;return d}
     function nearestPaletteIndex(r,g,b,allowed){let best=allowed[0]??0,bestDist=Infinity;for(const idx of allowed){const d=colorDistanceToPalette(r,g,b,PERLER_PALETTE[idx]);if(d<bestDist){bestDist=d;best=idx}}return best}
+    function buildAllowedPalette(counts,maxColors){
+      const ranked=[...counts.entries()].sort((a,b)=>b[1]-a[1]);
+      const allowed=[];
+      const add=idx=>{if(!allowed.includes(idx)&&allowed.length<maxColors)allowed.push(idx)};
+      for(const family of ['red','orange','yellow','green','cyan','blue','purple','pink']){
+        const hit=ranked.find(([idx,count])=>count>=2&&PERLER_PALETTE[idx].s>.25&&paletteFamily(PERLER_PALETTE[idx])===family);
+        if(hit)add(hit[0]);
+      }
+      for(const[idx]of ranked)add(idx);
+      return allowed;
+    }
 
     function preventDefaults(e){e.preventDefault();e.stopPropagation()}
     ['dragenter','dragover'].forEach(evt=>dropzone.addEventListener(evt,e=>{preventDefaults(e);dropzone.classList.add('is-dragging')}));
@@ -250,7 +277,10 @@
       const inv=1/scale;return{x:Math.round(x1*inv),y:Math.round(y1*inv),w:Math.round((x2-x1+1)*inv),h:Math.round((y2-y1+1)*inv)}
     }
     function cleanBackgroundPixel(r,g,b,bg){
+      const originalHsl=rgbToHsl(r,g,b);
+      if(originalHsl.s>.32)return[r,g,b];
       const lab=rgbToLab(r,g,b),hsl=rgbToHsl(r,g,b),dl=lab.l-bg.lab.l,da=lab.a-bg.lab.a,db=lab.b-bg.lab.b,delta=Math.sqrt(dl*dl+da*da+db*db),hueDiff=Math.abs(((hsl.h-bg.hsl.h+180)%360)-180);
+      if(hsl.l<.24&&hsl.s<.32)return bg.rgb;
       if(delta<16||(delta<24&&hueDiff<16&&Math.abs(hsl.s-bg.hsl.s)<.16)){return bg.rgb}
       return[r,g,b]
     }
@@ -261,9 +291,9 @@
       const tiny=document.createElement('canvas'),tctx=tiny.getContext('2d',{willReadFrequently:true});tiny.width=gridW;tiny.height=gridH;tctx.imageSmoothingEnabled=true;tctx.drawImage(sourceImage,crop.x,crop.y,crop.w,crop.h,0,0,gridW,gridH);
       const imgData=tctx.getImageData(0,0,gridW,gridH),pixels=imgData.data,initial=new Uint8Array(gridW*gridH),counts=new Map(),allIndexes=PERLER_PALETTE.map((_,i)=>i);
       for(let i=0;i<gridW*gridH;i++){const o=i*4;let r=pixels[o],g=pixels[o+1],b=pixels[o+2];if(backgroundToggle.checked)[r,g,b]=cleanBackgroundPixel(r,g,b,bg);[r,g,b]=tuneColorForBeads(r,g,b,detail);const idx=nearestPaletteIndex(r,g,b,allIndexes);initial[i]=idx;counts.set(idx,(counts.get(idx)||0)+1)}
-      const allowed=[...counts.entries()].sort((a,b)=>b[1]-a[1]).slice(0,maxColors).map(([idx])=>idx);
+      const allowed=buildAllowedPalette(counts,maxColors);
       const finalGrid=new Uint8Array(gridW*gridH),finalCounts=new Map();
-      for(let i=0;i<gridW*gridH;i++){let idx=initial[i];if(!allowed.includes(idx)){const p=PERLER_PALETTE[idx];idx=nearestPaletteIndex(p.r,p.g,p.b,allowed)}finalGrid[i]=idx;const code=PERLER_PALETTE[idx].code;finalCounts.set(code,(finalCounts.get(code)||0)+1)}
+      for(let i=0;i<gridW*gridH;i++){let idx=initial[i];if(!allowed.includes(idx)){const p=PERLER_PALETTE[idx],family=paletteFamily(p),familyAllowed=allowed.filter(allowedIdx=>paletteFamily(PERLER_PALETTE[allowedIdx])===family);idx=nearestPaletteIndex(p.r,p.g,p.b,familyAllowed.length?familyAllowed:allowed)}finalGrid[i]=idx;const code=PERLER_PALETTE[idx].code;finalCounts.set(code,(finalCounts.get(code)||0)+1)}
       lastGrid=finalGrid;lastGridW=gridW;lastGridH=gridH;lastCountsByCode=finalCounts;lastSettings={beads,maxColors,detail,crop:cropToggle.checked,background:backgroundToggle.checked};
       drawOutput(finalGrid,gridW,gridH);renderSummary(finalCounts,gridW*gridH);trackEvent('generate_pro_pattern',{size:beads,max_colors:maxColors,detail});statusEl.textContent=`Generated ${gridW} x ${gridH} pattern.`;
     }

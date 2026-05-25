@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pin Generator — BeadSnap</title>
+  <meta name="robots" content="noindex" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg-cream:#FAF6F0;--bg-cream-soft:#F4EEE4;--coral:#FF7B6B;--coral-dark:#E85F4E;
+      --teal:#5BA8A0;--teal-dark:#4A8F88;--ink:#3A3530;--ink-soft:#6B635C;--line:#E5DDD0;
+      --shadow:0 6px 24px rgba(58,53,48,.08);--shadow-hover:0 10px 32px rgba(58,53,48,.14);
+      --radius:16px;--radius-sm:10px;
+    }
+    *,*::before,*::after{box-sizing:border-box}
+    body{margin:0;font-family:'Nunito',-apple-system,BlinkMacSystemFont,sans-serif;font-weight:400;color:var(--ink);background-color:var(--bg-cream);background-image:linear-gradient(rgba(58,53,48,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(58,53,48,.04) 1px,transparent 1px);background-size:24px 24px;line-height:1.6;-webkit-font-smoothing:antialiased}
+    h1,h2,h3{font-weight:800;line-height:1.2;margin:0 0 .5em}
+    h1{font-size:clamp(1.6rem,4vw,2.4rem)}h2{font-size:clamp(1.3rem,3vw,1.8rem)}
+    p{margin:0 0 1em;color:var(--ink-soft)}
+    a{color:var(--coral-dark);text-decoration:none}a:hover{text-decoration:underline}
+    button:focus-visible,input:focus-visible,a:focus-visible,[tabindex]:focus-visible{outline:3px solid var(--teal);outline-offset:3px}
+    .container{max-width:1100px;margin:0 auto;padding:0 24px}
+
+    header.site-header{padding:12px 0;border-bottom:1px solid var(--line);background:rgba(250,246,240,.85);backdrop-filter:blur(8px);position:sticky;top:0;z-index:50}
+    .site-header .container{display:flex;align-items:center;gap:14px}
+    .logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:1.4rem;color:var(--ink);text-decoration:none}
+    .logo:hover{text-decoration:none}
+    .logo-icon{width:32px;height:32px;border-radius:50%;background:var(--coral);display:inline-flex;align-items:center;justify-content:center;box-shadow:inset 0 -3px 0 rgba(0,0,0,.08)}
+    .logo-icon::after{content:'';width:11px;height:11px;border-radius:50%;background:var(--bg-cream)}
+    .site-nav{margin-left:auto;display:flex;gap:6px;align-items:center}
+    .site-nav a{padding:6px 14px;border-radius:999px;font-weight:700;font-size:.9rem;color:var(--ink-soft);transition:background .15s,color .15s;text-decoration:none}
+    .site-nav a:hover,.site-nav a.is-active{background:var(--coral);color:#fff;text-decoration:none}
+
+    .page{padding:32px 0 60px}
+    .page .container{max-width:900px}
+
+    .card{background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);padding:28px;margin-bottom:24px}
+    @media(max-width:600px){.card{padding:18px}}
+
+    .upload-row{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+    .upload-row .btn{flex-shrink:0}
+    .file-info{font-size:.85rem;color:var(--ink-soft);max-width:300px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+    .preset-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:10px;margin-top:12px}
+    .preset-thumb{cursor:pointer;border-radius:8px;overflow:hidden;border:2px solid transparent;background:#fff;padding:0;transition:transform .15s,border-color .15s;box-shadow:0 2px 8px rgba(58,53,48,.06);text-align:center}
+    .preset-thumb:hover{transform:translateY(-2px);border-color:var(--coral)}
+    .preset-thumb img{width:100%;aspect-ratio:1/1;object-fit:cover;display:block}
+    .preset-caption{padding:6px;font-size:.78rem;font-weight:700;color:var(--ink-soft)}
+
+    .settings-row{display:flex;gap:20px;flex-wrap:wrap;align-items:center}
+    .settings-row label{font-weight:700;font-size:.9rem}
+    .settings-row input[type="range"]{flex:1;min-width:140px;-webkit-appearance:none;appearance:none;height:8px;background:var(--line);border-radius:999px;outline:none;cursor:pointer}
+    .settings-row input[type="range"]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;background:var(--coral);border-radius:50%;cursor:pointer;border:3px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,.15)}
+    .badge{background:var(--coral);color:#fff;padding:4px 12px;border-radius:999px;font-weight:700;font-size:.85rem;min-width:68px;text-align:center}
+    .option-row{display:flex;gap:10px;align-items:flex-start;flex-wrap:wrap;margin-bottom:14px}
+    .option-row input[type="checkbox"]{width:22px;height:22px;accent-color:var(--coral);cursor:pointer;margin-top:2px}
+    .option-row label{font-weight:800;font-size:.9rem;color:var(--ink)}
+    .option-help{font-size:.86rem;color:var(--ink-soft);margin:0}
+
+    .title-input-row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+    .title-input-row input{flex:1;min-width:200px;padding:10px 14px;border:2px solid var(--line);border-radius:999px;font-family:inherit;font-size:.9rem;background:var(--bg-cream);color:var(--ink)}
+    .title-input-row input:focus{border-color:var(--teal);outline:none}
+
+    .layout-options{display:flex;gap:12px;flex-wrap:wrap}
+    .layout-opt{padding:8px 16px;border:2px solid var(--line);border-radius:999px;cursor:pointer;font-weight:700;font-size:.85rem;background:#fff;transition:all .15s}
+    .layout-opt:hover{border-color:var(--teal)}
+    .layout-opt.is-active{background:var(--coral);color:#fff;border-color:var(--coral)}
+
+    .preview-section{text-align:center}
+    .preview-section canvas{max-width:100%;height:auto;border-radius:var(--radius);box-shadow:var(--shadow);display:block;margin:0 auto}
+    .preview-section .hint{font-size:.82rem;color:var(--ink-soft);margin-top:10px}
+
+    .btn{display:inline-flex;align-items:center;gap:8px;padding:12px 24px;border:none;border-radius:999px;font-family:inherit;font-weight:700;font-size:.95rem;cursor:pointer;transition:transform .15s,box-shadow .15s,background .15s}
+    .btn-primary{background:var(--coral);color:#fff;box-shadow:0 4px 0 var(--coral-dark)}
+    .btn-primary:hover{background:var(--coral-dark);transform:translateY(-2px);box-shadow:0 6px 0 var(--coral-dark)}
+    .btn-primary:active{transform:translateY(2px);box-shadow:0 0 0 var(--coral-dark)}
+    .btn-secondary{background:#fff;color:var(--ink);border:2px solid var(--line)}
+    .btn-secondary:hover{border-color:var(--teal);color:var(--teal-dark)}
+    .btn:disabled{opacity:.5;pointer-events:none}
+
+    footer.site-footer{background:var(--ink);color:var(--bg-cream);padding:32px 0;text-align:center}
+    footer.site-footer a{color:var(--bg-cream)}
+    footer.site-footer p{color:rgba(250,246,240,.7);margin-bottom:8px}
+    .footer-links{display:flex;gap:24px;justify-content:center;margin-bottom:12px;flex-wrap:wrap}
+
+    .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+  </style>
+</head>
+<body>
+
+  <header class="site-header" role="banner">
+    <div class="container">
+      <a href="index.html" class="logo" aria-label="BeadSnap home">
+        <span class="logo-icon" aria-hidden="true"></span>
+        <span>BeadSnap</span>
+      </a>
+      <nav class="site-nav" aria-label="Main navigation">
+        <a href="index.html">Home</a>
+        <a href="about.html">About</a>
+        <a href="pin-generator.html" class="is-active">Pin Generator</a>
+        <a href="terms.html">Terms</a>
+        <a href="contact.html">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="page">
+    <div class="container">
+
+      <h1>Pinterest Pin Generator</h1>
+      <p>Generate 1000×1500 Pinterest pins from your photos. Each pin shows the original photo + the bead pattern + BeadSnap branding — ready to post.</p>
+
+      <!-- Upload -->
+      <div class="card">
+        <h3>1. Choose a photo</h3>
+        <div class="upload-row">
+          <button class="btn btn-primary" id="upload-btn">Choose photo</button>
+          <input type="file" id="file-input" class="sr-only" accept="image/png,image/jpeg,image/webp" />
+          <span class="file-info" id="file-name">No file chosen</span>
+        </div>
+        <p style="margin-top:8px;font-size:.82rem;">Or use an example:</p>
+        <div class="preset-grid" id="preset-grid"></div>
+      </div>
+
+      <!-- Settings -->
+      <div class="card" id="settings-card" style="display:none">
+        <h3>2. Customize</h3>
+        <div class="settings-row" style="margin-bottom:14px">
+          <label for="size-slider">Pattern size</label>
+          <input type="range" id="size-slider" min="16" max="96" value="48" step="1" />
+          <span class="badge"><span id="size-value">48</span> beads</span>
+        </div>
+        <div class="option-row">
+          <input type="checkbox" id="crop-toggle" checked />
+          <div>
+            <label for="crop-toggle">Crop to subject</label>
+            <p class="option-help">Uses the same subject crop and color matching as the main free tool, so the bead preview looks closer to the uploaded photo.</p>
+          </div>
+        </div>
+        <div class="title-input-row" style="margin-bottom:14px">
+          <label for="pin-title" style="font-weight:700;font-size:.9rem;white-space:nowrap">Pin text overlay</label>
+          <input type="text" id="pin-title" placeholder="e.g. Turn Your Pet Photo into a Perler Bead Pattern" maxlength="80" />
+        </div>
+        <div class="layout-options" style="margin-bottom:14px">
+          <span style="font-weight:700;font-size:.9rem;line-height:2.2">Layout:</span>
+          <button class="layout-opt is-active" data-layout="stacked">Stacked</button>
+          <button class="layout-opt" data-layout="split">Side by side</button>
+        </div>
+        <button class="btn btn-primary" id="generate-btn">Generate pin preview</button>
+      </div>
+
+      <!-- Preview -->
+      <div class="card preview-section" id="preview-card" style="display:none">
+        <h3>3. Preview & download</h3>
+        <canvas id="pin-canvas" width="1000" height="1500" aria-label="Pinterest pin preview at 1000×1500 pixels"></canvas>
+        <p class="hint">This is a scaled-down preview. The downloaded file will be full 1000×1500 resolution.</p>
+        <button class="btn btn-primary" id="download-pin-btn" style="margin-top:12px">Download Pin (PNG)</button>
+      </div>
+
+    </div>
+  </main>
+
+  <footer class="site-footer" role="contentinfo">
+    <div class="container">
+      <div class="footer-links">
+        <a href="index.html">Home</a>
+        <a href="about.html">About</a>
+        <a href="privacy.html">Privacy</a>
+        <a href="terms.html">Terms</a>
+        <a href="contact.html">Contact</a>
+      </div>
+      <p>&copy; <span id="year"></span> BeadSnap. Made with patience and a lot of tiny plastic beads.</p>
+    </div>
+  </footer>
+
+  <script>
+    // ── DOM refs ──
+    const uploadBtn = document.getElementById('upload-btn');
+    const fileInput = document.getElementById('file-input');
+    const fileNameEl = document.getElementById('file-name');
+    const settingsCard = document.getElementById('settings-card');
+    const sizeSlider = document.getElementById('size-slider');
+    const sizeValue = document.getElementById('size-value');
+    const cropToggle = document.getElementById('crop-toggle');
+    const pinTitleInput = document.getElementById('pin-title');
+    const generateBtn = document.getElementById('generate-btn');
+    const previewCard = document.getElementById('preview-card');
+    const pinCanvas = document.getElementById('pin-canvas');
+    const downloadPinBtn = document.getElementById('download-pin-btn');
+    const presetGrid = document.getElementById('preset-grid');
+    const layoutOpts = document.querySelectorAll('.layout-opt');
+
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    let sourceImage = null;
+    let currentLayout = 'stacked';
+
+    // ── Perler palette (same as main site) ──
+    const PERLER_PALETTE = [
+      {code:'P01',name:'White',hex:'#FFFFFF'},{code:'P02',name:'Cream',hex:'#F5EEDC'},
+      {code:'P03',name:'Light Pink',hex:'#FFC0CB'},{code:'P04',name:'Bubblegum Pink',hex:'#FF77A8'},
+      {code:'P05',name:'Pink',hex:'#FF69B4'},{code:'P06',name:'Magenta',hex:'#C71585'},
+      {code:'P07',name:'Red',hex:'#ED1C24'},{code:'P08',name:'Cranapple',hex:'#B22222'},
+      {code:'P09',name:'Orange',hex:'#FF7F00'},{code:'P10',name:'Cheddar',hex:'#FFA500'},
+      {code:'P11',name:'Yellow',hex:'#FFEB3B'},{code:'P12',name:'Pastel Yellow',hex:'#FFF59D'},
+      {code:'P13',name:'Lime Green',hex:'#B5E61D'},{code:'P14',name:'Kiwi Lime',hex:'#8CC63F'},
+      {code:'P15',name:'Light Green',hex:'#7BC678'},{code:'P16',name:'Green',hex:'#22B14C'},
+      {code:'P17',name:'Dark Green',hex:'#006837'},{code:'P18',name:'Toothpaste',hex:'#99D9EA'},
+      {code:'P19',name:'Pastel Blue',hex:'#B3D9FF'},{code:'P20',name:'Light Blue',hex:'#3FA9F5'},
+      {code:'P21',name:'Blue',hex:'#0066CC'},{code:'P22',name:'Dark Blue',hex:'#1B1464'},
+      {code:'P23',name:'Periwinkle',hex:'#8B8FE0'},{code:'P24',name:'Purple',hex:'#662D91'},
+      {code:'P25',name:'Plum',hex:'#800080'},{code:'P26',name:'Lavender',hex:'#B695C0'},
+      {code:'P27',name:'Tan',hex:'#D4A373'},{code:'P28',name:'Light Brown',hex:'#A0522D'},
+      {code:'P29',name:'Brown',hex:'#6F4E37'},{code:'P30',name:'Dark Brown',hex:'#3E2723'},
+      {code:'P31',name:'Gray',hex:'#808080'},{code:'P32',name:'Light Gray',hex:'#C0C0C0'},
+      {code:'P33',name:'Dark Gray',hex:'#404040'},{code:'P34',name:'Black',hex:'#000000'},
+      {code:'P35',name:'Peach',hex:'#FFCBA4'},{code:'P36',name:'Light Tan',hex:'#F5DEB3'},
+      {code:'P37',name:'Hot Coral',hex:'#FF6F61'},{code:'P38',name:'Sand',hex:'#C2B280'}
+    ];
+    function srgbToLinear(v){v/=255;return v<=.04045?v/12.92:Math.pow((v+.055)/1.055,2.4)}
+    function rgbToLab(r,g,b){
+      const rl=srgbToLinear(r),gl=srgbToLinear(g),bl=srgbToLinear(b);
+      let x=(rl*.4124+gl*.3576+bl*.1805)/.95047;
+      let y=(rl*.2126+gl*.7152+bl*.0722);
+      let z=(rl*.0193+gl*.1192+bl*.9505)/1.08883;
+      const f=t=>t>.008856?Math.cbrt(t):(7.787*t)+(16/116);
+      x=f(x);y=f(y);z=f(z);
+      return {l:(116*y)-16,a:500*(x-y),b:200*(y-z)}
+    }
+    function rgbToHsl(r,g,b){
+      r/=255;g/=255;b/=255;
+      const max=Math.max(r,g,b),min=Math.min(r,g,b),l=(max+min)/2;
+      if(max===min)return{h:0,s:0,l};
+      const d=max-min,s=l>.5?d/(2-max-min):d/(max+min);
+      let h;
+      if(max===r)h=(g-b)/d+(g<b?6:0);
+      else if(max===g)h=(b-r)/d+2;
+      else h=(r-g)/d+4;
+      return{h:h*60,s,l}
+    }
+    function tuneColorForBeads(r,g,b){
+      const avg=(r+g+b)/3;
+      r=avg+(r-avg)*1.12;g=avg+(g-avg)*1.12;b=avg+(b-avg)*1.12;
+      r=(r-128)*1.04+128;g=(g-128)*1.04+128;b=(b-128)*1.04+128;
+      return [Math.max(0,Math.min(255,Math.round(r))),Math.max(0,Math.min(255,Math.round(g))),Math.max(0,Math.min(255,Math.round(b)))]
+    }
+    PERLER_PALETTE.forEach(p => {
+      p.r = parseInt(p.hex.slice(1,3), 16);
+      p.g = parseInt(p.hex.slice(3,5), 16);
+      p.b = parseInt(p.hex.slice(5,7), 16);
+      const lab=rgbToLab(p.r,p.g,p.b),hsl=rgbToHsl(p.r,p.g,p.b);
+      p.l=lab.l;p.a=lab.a;p.labB=lab.b;p.h=hsl.h;p.s=hsl.s;
+    });
+
+    const nearestCache = new Map();
+    function nearestPerlerColor(r, g, b) {
+      [r,g,b]=tuneColorForBeads(r,g,b);
+      const key = (r << 16) | (g << 8) | b;
+      const hit = nearestCache.get(key);
+      if (hit !== undefined) return hit;
+      const lab=rgbToLab(r,g,b),hsl=rgbToHsl(r,g,b);
+      let bestIdx = 0, bestDist = Infinity;
+      for (let i = 0; i < PERLER_PALETTE.length; i++) {
+        const p=PERLER_PALETTE[i],dl=lab.l-p.l,da=lab.a-p.a,db=lab.b-p.labB;
+        let d=dl*dl*1.15+da*da+db*db;
+        const hueDiff=Math.abs(((hsl.h-p.h+180)%360)-180);
+        if(hsl.s>.18&&p.s>.18)d+=hueDiff*hueDiff*.18;
+        const inputLooksYellow=hsl.h>=34&&hsl.h<=72&&hsl.s>.22&&r>=g*.82;
+        const candidateLooksGreen=p.code==='P13'||p.code==='P14'||p.code==='P15'||p.code==='P16'||p.code==='P17';
+        if(inputLooksYellow&&candidateLooksGreen)d+=2600;
+        if(hsl.l<.18&&p.code!=='P34'&&p.code!=='P33'&&p.code!=='P30')d+=900;
+        if (d < bestDist) { bestDist = d; bestIdx = i; }
+      }
+      nearestCache.set(key, bestIdx);
+      return bestIdx;
+    }
+
+    function estimateSubjectCrop(img){
+      const sampleMax=96;
+      const scale=Math.min(sampleMax/img.naturalWidth,sampleMax/img.naturalHeight,1);
+      const sw=Math.max(1,Math.round(img.naturalWidth*scale)),sh=Math.max(1,Math.round(img.naturalHeight*scale));
+      const sample=document.createElement('canvas');
+      sample.width=sw;sample.height=sh;
+      const sctx=sample.getContext('2d',{willReadFrequently:true});
+      sctx.imageSmoothingEnabled=true;
+      sctx.drawImage(img,0,0,sw,sh);
+      const data=sctx.getImageData(0,0,sw,sh).data;
+      const border=[];
+      for(let y=0;y<sh;y++){for(let x=0;x<sw;x++){
+        if(x<3||y<3||x>=sw-3||y>=sh-3){
+          const o=(y*sw+x)*4;border.push([data[o],data[o+1],data[o+2]]);
+        }
+      }}
+      border.sort((a,b)=>(a[0]+a[1]+a[2])-(b[0]+b[1]+b[2]));
+      const mid=border[Math.floor(border.length/2)]||[0,0,0];
+      const bgLab=rgbToLab(mid[0],mid[1],mid[2]);
+      const bgHsl=rgbToHsl(mid[0],mid[1],mid[2]);
+      const mask=new Uint8Array(sw*sh);
+      let active=0;
+      for(let y=0;y<sh;y++){for(let x=0;x<sw;x++){
+        const i=y*sw+x,o=i*4,r=data[o],g=data[o+1],b=data[o+2];
+        const lab=rgbToLab(r,g,b),hsl=rgbToHsl(r,g,b);
+        const dl=lab.l-bgLab.l,da=lab.a-bgLab.a,db=lab.b-bgLab.b;
+        const delta=Math.sqrt(dl*dl+da*da+db*db);
+        const hueDiff=Math.abs(((hsl.h-bgHsl.h+180)%360)-180);
+        const isDifferent=delta>18||(hsl.s>.32&&hueDiff>18&&Math.abs(hsl.l-bgHsl.l)>.04);
+        const borderPixel=x<2||y<2||x>=sw-2||y>=sh-2;
+        if(isDifferent&&!borderPixel){mask[i]=1;active++}
+      }}
+      if(active<sw*sh*.015||active>sw*sh*.82)return{x:0,y:0,w:img.naturalWidth,h:img.naturalHeight};
+
+      const seen=new Uint8Array(sw*sh);
+      let best=null;
+      const stack=[];
+      for(let i=0;i<mask.length;i++){
+        if(!mask[i]||seen[i])continue;
+        let count=0,minX=sw,minY=sh,maxX=0,maxY=0;
+        stack.length=0;stack.push(i);seen[i]=1;
+        while(stack.length){
+          const cur=stack.pop(),x=cur%sw,y=Math.floor(cur/sw);
+          count++;if(x<minX)minX=x;if(x>maxX)maxX=x;if(y<minY)minY=y;if(y>maxY)maxY=y;
+          const neighbors=[cur-1,cur+1,cur-sw,cur+sw];
+          for(const n of neighbors){
+            if(n<0||n>=mask.length||seen[n]||!mask[n])continue;
+            if((n===cur-1&&x===0)||(n===cur+1&&x===sw-1))continue;
+            seen[n]=1;stack.push(n);
+          }
+        }
+        if(count>20&&(!best||count>best.count))best={count,minX,minY,maxX,maxY};
+      }
+      if(!best||best.count<active*.18)return{x:0,y:0,w:img.naturalWidth,h:img.naturalHeight};
+      const pad=Math.max(4,Math.round(Math.max(best.maxX-best.minX,best.maxY-best.minY)*.18));
+      let x1=Math.max(0,best.minX-pad),y1=Math.max(0,best.minY-pad),x2=Math.min(sw-1,best.maxX+pad),y2=Math.min(sh-1,best.maxY+pad);
+      const minSide=Math.min(sw,sh)*.34;
+      if((x2-x1)<minSide){const extra=(minSide-(x2-x1))/2;x1=Math.max(0,Math.floor(x1-extra));x2=Math.min(sw-1,Math.ceil(x2+extra))}
+      if((y2-y1)<minSide){const extra=(minSide-(y2-y1))/2;y1=Math.max(0,Math.floor(y1-extra));y2=Math.min(sh-1,Math.ceil(y2+extra))}
+      const inv=1/scale;
+      return{x:Math.round(x1*inv),y:Math.round(y1*inv),w:Math.round((x2-x1+1)*inv),h:Math.round((y2-y1+1)*inv)}
+    }
+
+    // ── Presets ──
+    const PRESETS = [
+      { name: 'Child', src: 'images/example-1.jpg' },
+      { name: 'Beach', src: 'images/example-2.jpg' },
+      { name: 'Animal', src: 'images/example-3.jpg' },
+      { name: 'Cake', src: 'images/example-4.jpg' }
+    ];
+
+    PRESETS.forEach(p => {
+      const btn = document.createElement('button');
+      btn.className = 'preset-thumb';
+      btn.innerHTML = `<img src="${p.src}" alt="${p.name}" loading="lazy" /><div class="preset-caption">${p.name}</div>`;
+      btn.addEventListener('click', () => loadPreset(p.src, p.name));
+      presetGrid.appendChild(btn);
+    });
+
+    function loadPreset(src, name) {
+      const img = new Image();
+      img.crossOrigin = 'anonymous';
+      img.onload = () => {
+        sourceImage = img;
+        fileNameEl.textContent = name + ' (example)';
+        showSettings();
+      };
+      img.src = src;
+    }
+
+    // ── Upload ──
+    uploadBtn.addEventListener('click', () => fileInput.click());
+    fileInput.addEventListener('change', e => {
+      const f = e.target.files && e.target.files[0];
+      if (!f) return;
+      if (!f.type.startsWith('image/')) { alert('Please upload an image file.'); return; }
+      fileNameEl.textContent = f.name;
+      const reader = new FileReader();
+      reader.onload = ev => {
+        const img = new Image();
+        img.onload = () => { sourceImage = img; showSettings(); };
+        img.src = ev.target.result;
+      };
+      reader.readAsDataURL(f);
+    });
+
+    function showSettings() {
+      settingsCard.style.display = '';
+      previewCard.style.display = 'none';
+    }
+
+    // ── Layout toggle ──
+    layoutOpts.forEach(opt => {
+      opt.addEventListener('click', () => {
+        layoutOpts.forEach(o => o.classList.remove('is-active'));
+        opt.classList.add('is-active');
+        currentLayout = opt.dataset.layout;
+        if (sourceImage && previewCard.style.display !== 'none') renderPin();
+      });
+    });
+
+    // ── Slider ──
+    sizeSlider.addEventListener('input', () => {
+      sizeValue.textContent = sizeSlider.value;
+      if (sourceImage && previewCard.style.display !== 'none') renderPin();
+    });
+    cropToggle.addEventListener('change', () => {
+      if (sourceImage && previewCard.style.display !== 'none') renderPin();
+    });
+    pinTitleInput.addEventListener('input', () => {
+      if (sourceImage && previewCard.style.display !== 'none') renderPin();
+    });
+
+    // ── Generate Pin ──
+    generateBtn.addEventListener('click', () => {
+      if (!sourceImage) return;
+      renderPin();
+      previewCard.style.display = '';
+      previewCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+
+    function renderPin() {
+      const W = 1000, H = 1500;
+      pinCanvas.width = W;
+      pinCanvas.height = H;
+      const ctx = pinCanvas.getContext('2d');
+
+      // Background
+      ctx.fillStyle = '#FAF6F0';
+      ctx.fillRect(0, 0, W, H);
+
+      // Subtle grid
+      ctx.strokeStyle = 'rgba(58,53,48,0.05)';
+      ctx.lineWidth = 0.5;
+      for (let x = 0; x < W; x += 24) { ctx.beginPath(); ctx.moveTo(x + 0.5, 0); ctx.lineTo(x + 0.5, H); ctx.stroke(); }
+      for (let y = 0; y < H; y += 24) { ctx.beginPath(); ctx.moveTo(0, y + 0.5); ctx.lineTo(W, y + 0.5); ctx.stroke(); }
+
+      // Top coral accent line
+      ctx.fillStyle = '#FF7B6B';
+      ctx.fillRect(0, 0, W, 8);
+
+      const beadsPerSide = parseInt(sizeSlider.value, 10);
+      const crop = cropToggle.checked ? estimateSubjectCrop(sourceImage) : {x:0,y:0,w:sourceImage.naturalWidth,h:sourceImage.naturalHeight};
+      const aspect = crop.w / crop.h;
+      let gridW, gridH;
+      if (aspect >= 1) { gridW = beadsPerSide; gridH = Math.max(1, Math.round(beadsPerSide / aspect)); }
+      else { gridH = beadsPerSide; gridW = Math.max(1, Math.round(beadsPerSide * aspect)); }
+
+      // Render bead grid
+      const tinyCanvas = document.createElement('canvas');
+      tinyCanvas.width = gridW; tinyCanvas.height = gridH;
+      const tinyCtx = tinyCanvas.getContext('2d');
+      tinyCtx.imageSmoothingEnabled = true;
+      tinyCtx.drawImage(sourceImage, crop.x, crop.y, crop.w, crop.h, 0, 0, gridW, gridH);
+      const imgData = tinyCtx.getImageData(0, 0, gridW, gridH);
+      const pixels = imgData.data;
+      const beadGrid = new Uint8Array(gridW * gridH);
+      for (let i = 0; i < gridW * gridH; i++) {
+        const off = i * 4;
+        beadGrid[i] = nearestPerlerColor(pixels[off], pixels[off+1], pixels[off+2]);
+      }
+
+      const MARGIN = 40;
+      const titleText = pinTitleInput.value.trim();
+
+      if (currentLayout === 'stacked') {
+        renderStacked(ctx, W, H, MARGIN, gridW, gridH, beadGrid, titleText);
+      } else {
+        renderSplit(ctx, W, H, MARGIN, gridW, gridH, beadGrid, titleText);
+      }
+
+      // Scale down canvas for preview display
+      const displayCanvas = pinCanvas;
+      displayCanvas.style.width = Math.min(500, pinCanvas.parentElement.clientWidth - 40) + 'px';
+      displayCanvas.style.height = 'auto';
+    }
+
+    function renderStacked(ctx, W, H, MARGIN, gridW, gridH, beadGrid, titleText) {
+      let curY = 8; // after top accent line
+
+      // ── Title overlay ──
+      if (titleText) {
+        curY += 60;
+        ctx.fillStyle = '#3A3530';
+        ctx.font = '800 36px "Nunito", -apple-system, sans-serif';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'top';
+        curY = wrapText(ctx, titleText, W / 2, curY - 10, W - MARGIN * 2, 44) + 18;
+      } else {
+        curY += 20;
+      }
+
+      // ── Original photo ──
+      const photoMaxW = W - MARGIN * 2;
+      const photoMaxH = 560;
+      const [pw, ph] = fitSize(sourceImage.naturalWidth, sourceImage.naturalHeight, photoMaxW, photoMaxH);
+      const px = (W - pw) / 2;
+      const py = curY;
+
+      // Label
+      ctx.fillStyle = '#6B635C';
+      ctx.font = '700 15px "Nunito", -apple-system, sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('ORIGINAL PHOTO', W / 2, py + 28);
+
+      // Photo with rounded corners + shadow
+      const photoY = py + 42;
+      roundRect(ctx, px - 4, photoY - 4, pw + 8, ph + 8, 16);
+      ctx.fillStyle = 'rgba(58,53,48,0.12)';
+      ctx.fill();
+      ctx.save();
+      roundRect(ctx, px, photoY, pw, ph, 14);
+      ctx.clip();
+      ctx.drawImage(sourceImage, px, photoY, pw, ph);
+      ctx.restore();
+      roundRect(ctx, px, photoY, pw, ph, 14);
+      ctx.strokeStyle = 'rgba(58,53,48,0.1)';
+      ctx.lineWidth = 1;
+      ctx.stroke();
+
+      curY = photoY + ph + 30;
+
+      // ── Arrow ──
+      ctx.fillStyle = '#FF7B6B';
+      ctx.font = '800 28px "Nunito", -apple-system, sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('↓', W / 2, curY + 14);
+      curY += 44;
+
+      // ── Bead pattern ──
+      const beadMaxW = W - MARGIN * 2;
+      const beadMaxH = 520;
+      const CELL = Math.min(Math.floor(beadMaxW / gridW), Math.floor(beadMaxH / gridH));
+      const bw = gridW * CELL;
+      const bh = gridH * CELL;
+      const bx = (W - bw) / 2;
+
+      // Label
+      ctx.fillStyle = '#6B635C';
+      ctx.font = '700 15px "Nunito", -apple-system, sans-serif';
+      ctx.fillText('BEAD PATTERN', W / 2, curY + 18);
+
+      const beadY = curY + 32;
+      // Shadow
+      ctx.fillStyle = 'rgba(58,53,48,0.12)';
+      ctx.fillRect(bx - 3, beadY - 3, bw + 6, bh + 6);
+      // Bead cells
+      for (let y = 0; y < gridH; y++) {
+        for (let x = 0; x < gridW; x++) {
+          const p = PERLER_PALETTE[beadGrid[y * gridW + x]];
+          ctx.fillStyle = p.hex;
+          ctx.fillRect(bx + x * CELL, beadY + y * CELL, CELL, CELL);
+        }
+      }
+      // Grid lines
+      ctx.strokeStyle = 'rgba(58,53,48,0.35)';
+      ctx.lineWidth = 0.5;
+      ctx.beginPath();
+      for (let x = 0; x <= gridW; x++) { const px2 = bx + x * CELL + 0.5; ctx.moveTo(px2, beadY); ctx.lineTo(px2, beadY + bh); }
+      for (let y = 0; y <= gridH; y++) { const py2 = beadY + y * CELL + 0.5; ctx.moveTo(bx, py2); ctx.lineTo(bx + bw, py2); }
+      ctx.stroke();
+
+      curY = beadY + bh + 10;
+
+      // ── Branding bar ──
+      const brandY = H - 100;
+      ctx.fillStyle = '#FF7B6B';
+      ctx.fillRect(0, brandY, W, 100);
+
+      // Logo dot + text as a centered group
+      const logoX = W / 2 - 105;
+      ctx.fillStyle = '#FAF6F0';
+      ctx.beginPath();
+      ctx.arc(logoX, brandY + 50, 18, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = '#FF7B6B';
+      ctx.beginPath();
+      ctx.arc(logoX, brandY + 50, 7, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.fillStyle = '#FFFFFF';
+      ctx.font = '800 32px "Nunito", -apple-system, sans-serif';
+      ctx.textAlign = 'left';
+      ctx.fillText('beadsnap.app', logoX + 32, brandY + 38);
+
+      ctx.font = '600 18px "Nunito", -apple-system, sans-serif';
+      ctx.fillText('Free Pattern Maker', logoX + 32, brandY + 64);
+    }
+
+    function renderSplit(ctx, W, H, MARGIN, gridW, gridH, beadGrid, titleText) {
+      let curY = 8;
+
+      // ── Title overlay ──
+      if (titleText) {
+        curY += 60;
+        ctx.fillStyle = '#3A3530';
+        ctx.font = '800 34px "Nunito", -apple-system, sans-serif';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'top';
+        curY = wrapText(ctx, titleText, W / 2, curY - 10, W - MARGIN * 2, 42) + 18;
+      } else {
+        curY += 20;
+      }
+
+      const halfW = (W - MARGIN * 3) / 2;
+      const sideMaxH = 880;
+      const leftX = MARGIN;
+      const rightX = MARGIN * 2 + halfW;
+
+      // ── Left: Original ──
+      ctx.fillStyle = '#6B635C';
+      ctx.font = '700 15px "Nunito", -apple-system, sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('ORIGINAL PHOTO', leftX + halfW / 2, curY + 24);
+
+      const [pw, ph] = fitSize(sourceImage.naturalWidth, sourceImage.naturalHeight, halfW - 10, sideMaxH);
+      const photoY = curY + 38;
+      const px2 = leftX + (halfW - pw) / 2;
+
+      roundRect(ctx, px2 - 3, photoY - 3, pw + 6, ph + 6, 14);
+      ctx.fillStyle = 'rgba(58,53,48,0.12)';
+      ctx.fill();
+      ctx.save();
+      roundRect(ctx, px2, photoY, pw, ph, 12);
+      ctx.clip();
+      ctx.drawImage(sourceImage, px2, photoY, pw, ph);
+      ctx.restore();
+      roundRect(ctx, px2, photoY, pw, ph, 12);
+      ctx.strokeStyle = 'rgba(58,53,48,0.1)';
+      ctx.lineWidth = 1;
+      ctx.stroke();
+
+      // ── Right: Bead pattern ──
+      ctx.fillStyle = '#6B635C';
+      ctx.textAlign = 'center';
+      ctx.fillText('BEAD PATTERN', rightX + halfW / 2, curY + 24);
+
+      const CELL = Math.min(Math.floor((halfW - 10) / gridW), Math.floor((sideMaxH) / gridH));
+      const bw = gridW * CELL;
+      const bh = gridH * CELL;
+      const bx = rightX + (halfW - bw) / 2;
+      const beadY = photoY + (ph - bh) / 2; // center vertically with photo
+
+      ctx.fillStyle = 'rgba(58,53,48,0.12)';
+      ctx.fillRect(bx - 3, beadY - 3, bw + 6, bh + 6);
+      for (let y = 0; y < gridH; y++) {
+        for (let x = 0; x < gridW; x++) {
+          const p = PERLER_PALETTE[beadGrid[y * gridW + x]];
+          ctx.fillStyle = p.hex;
+          ctx.fillRect(bx + x * CELL, beadY + y * CELL, CELL, CELL);
+        }
+      }
+      ctx.strokeStyle = 'rgba(58,53,48,0.35)';
+      ctx.lineWidth = 0.5;
+      ctx.beginPath();
+      for (let x = 0; x <= gridW; x++) { const px3 = bx + x * CELL + 0.5; ctx.moveTo(px3, beadY); ctx.lineTo(px3, beadY + bh); }
+      for (let y = 0; y <= gridH; y++) { const py3 = beadY + y * CELL + 0.5; ctx.moveTo(bx, py3); ctx.lineTo(bx + bw, py3); }
+      ctx.stroke();
+
+      curY = photoY + ph + 20;
+
+      // ── Branding bar ──
+      const brandY = H - 100;
+      ctx.fillStyle = '#FF7B6B';
+      ctx.fillRect(0, brandY, W, 100);
+
+      const logoX = W / 2 - 105;
+      ctx.fillStyle = '#FAF6F0';
+      ctx.beginPath();
+      ctx.arc(logoX, brandY + 50, 18, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = '#FF7B6B';
+      ctx.beginPath();
+      ctx.arc(logoX, brandY + 50, 7, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.fillStyle = '#FFFFFF';
+      ctx.font = '800 32px "Nunito", -apple-system, sans-serif';
+      ctx.textAlign = 'left';
+      ctx.fillText('beadsnap.app', logoX + 32, brandY + 38);
+      ctx.font = '600 18px "Nunito", -apple-system, sans-serif';
+      ctx.fillText('Free Pattern Maker', logoX + 32, brandY + 64);
+    }
+
+    // ── Helpers ──
+    function fitSize(srcW, srcH, maxW, maxH) {
+      const scale = Math.min(maxW / srcW, maxH / srcH);
+      return [Math.round(srcW * scale), Math.round(srcH * scale)];
+    }
+
+    function roundRect(ctx, x, y, w, h, r) {
+      ctx.beginPath();
+      ctx.moveTo(x + r, y);
+      ctx.lineTo(x + w - r, y);
+      ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+      ctx.lineTo(x + w, y + h - r);
+      ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+      ctx.lineTo(x + r, y + h);
+      ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+      ctx.lineTo(x, y + r);
+      ctx.quadraticCurveTo(x, y, x + r, y);
+      ctx.closePath();
+    }
+
+    function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
+      const words = text.split(' ');
+      let line = '';
+      let ly = y;
+      for (const word of words) {
+        const test = line ? line + ' ' + word : word;
+        if (ctx.measureText(test).width > maxWidth && line) {
+          ctx.fillText(line, x, ly);
+          line = word;
+          ly += lineHeight;
+        } else {
+          line = test;
+        }
+      }
+      if (line) ctx.fillText(line, x, ly);
+      return ly + lineHeight;
+    }
+
+    // ── Download ──
+    downloadPinBtn.addEventListener('click', () => {
+      const link = document.createElement('a');
+      link.download = 'beadsnap-pin.png';
+      link.href = pinCanvas.toDataURL('image/png');
+      link.click();
+    });
+  </script>
+</body>
+</html>
