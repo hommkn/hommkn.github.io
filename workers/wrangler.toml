@@ -1,6 +1,0 @@
-name = "beadsnap-webhook"
-main = "src/index.js"
-compatibility_date = "2026-05-25"
-
-[env.production]
-vars = { ENVIRONMENT = "production" }
