@@ -312,6 +312,7 @@
     function neutralBackgroundRgb(bg){
       const avg=(bg.rgb[0]+bg.rgb[1]+bg.rgb[2])/3;
       if(avg<42)return[0,0,0];
+      if(bg.hsl.s>.24)return bg.rgb;
       if(avg<82)return[64,64,64];
       if(avg<170)return[128,128,128];
       return[255,255,255];
@@ -333,7 +334,7 @@
       const lab=rgbToLab(r,g,b),hsl=rgbToHsl(r,g,b),dl=lab.l-bg.lab.l,da=lab.a-bg.lab.a,db=lab.b-bg.lab.b,delta=Math.sqrt(dl*dl+da*da+db*db),hueDiff=Math.abs(((hsl.h-bg.hsl.h+180)%360)-180);
       const nearBackground=delta<16||(delta<28&&hueDiff<22&&Math.abs(hsl.s-bg.hsl.s)<.22);
       if(nearBackground)return neutralBackgroundRgb(bg);
-      if(hsl.l<.22&&hsl.s<.38)return neutralBackgroundRgb(bg);
+      if(hsl.l<.22&&hsl.s<.38&&bg.hsl.s<.24)return neutralBackgroundRgb(bg);
       if(hsl.s>.32)return[r,g,b];
       return[r,g,b]
     }
