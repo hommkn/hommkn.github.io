@@ -604,6 +604,9 @@
       const minSide=Math.min(sw,sh)*.34;
       if((x2-x1)<minSide){const extra=(minSide-(x2-x1))/2;x1=Math.max(0,Math.floor(x1-extra));x2=Math.min(sw-1,Math.ceil(x2+extra))}
       if((y2-y1)<minSide){const extra=(minSide-(y2-y1))/2;y1=Math.max(0,Math.floor(y1-extra));y2=Math.min(sh-1,Math.ceil(y2+extra))}
+      const cropW=x2-x1+1,cropH=y2-y1+1,cropAspect=cropW/cropH,imageAspect=sw/sh,cropArea=(cropW*cropH)/(sw*sh);
+      const looksLikeBackgroundBand=cropAspect>imageAspect*1.35&&(cropW>sw*.7||cropArea<.55);
+      if(looksLikeBackgroundBand)return{x:0,y:0,w:img.naturalWidth,h:img.naturalHeight,activeRatio:active/(sw*sh)};
       const inv=1/scale;
       return{x:Math.round(x1*inv),y:Math.round(y1*inv),w:Math.round((x2-x1+1)*inv),h:Math.round((y2-y1+1)*inv),activeRatio:active/(sw*sh)}
     }
