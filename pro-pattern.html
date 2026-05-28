@@ -307,7 +307,7 @@
     function sampleBackground(img){
       const sw=80,sh=Math.max(1,Math.round(sw*img.naturalHeight/img.naturalWidth)),c=document.createElement('canvas'),ctx=c.getContext('2d',{willReadFrequently:true});c.width=sw;c.height=sh;ctx.drawImage(img,0,0,sw,sh);const data=ctx.getImageData(0,0,sw,sh).data,colors=[];
       for(let y=0;y<sh;y++){for(let x=0;x<sw;x++){if(x<3||y<3||x>=sw-3||y>=sh-3){const o=(y*sw+x)*4;colors.push([data[o],data[o+1],data[o+2]])}}}
-      colors.sort((a,b)=>(a[0]+a[1]+a[2])-(b[0]+b[1]+b[2]));const rgb=colors[Math.floor(colors.length/2)]||[255,255,255];return{rgb,lab:rgbToLab(rgb[0],rgb[1],rgb[2]),hsl:rgbToHsl(rgb[0],rgb[1],rgb[2])}
+      colors.sort((a,b)=>(a[0]+a[1]+a[2])-(b[0]+b[1]+b[2]));const rgb=colors[Math.floor(colors.length/2)]||[255,255,255],lab=rgbToLab(rgb[0],rgb[1],rgb[2]),hsl=rgbToHsl(rgb[0],rgb[1],rgb[2]);let spread=0;for(const c of colors){const l=rgbToLab(c[0],c[1],c[2]),dl=l.l-lab.l,da=l.a-lab.a,db=l.b-lab.b;spread+=Math.sqrt(dl*dl+da*da+db*db)}spread/=Math.max(1,colors.length);return{rgb,lab,hsl,canClean:spread<18||hsl.s<.18}
     }
     function neutralBackgroundRgb(bg){
       const avg=(bg.rgb[0]+bg.rgb[1]+bg.rgb[2])/3;
@@ -331,6 +331,7 @@
       const inv=1/scale;return{x:Math.round(x1*inv),y:Math.round(y1*inv),w:Math.round((x2-x1+1)*inv),h:Math.round((y2-y1+1)*inv)}
     }
     function cleanBackgroundPixel(r,g,b,bg){
+      if(!bg.canClean)return[r,g,b];
       const lab=rgbToLab(r,g,b),hsl=rgbToHsl(r,g,b),dl=lab.l-bg.lab.l,da=lab.a-bg.lab.a,db=lab.b-bg.lab.b,delta=Math.sqrt(dl*dl+da*da+db*db),hueDiff=Math.abs(((hsl.h-bg.hsl.h+180)%360)-180);
       const nearBackground=delta<16||(delta<28&&hueDiff<22&&Math.abs(hsl.s-bg.hsl.s)<.22);
       if(nearBackground)return neutralBackgroundRgb(bg);
