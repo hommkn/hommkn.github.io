@@ -1,0 +1,10 @@
+name = "beadsnap-webhook"
+main = "src/index.js"
+compatibility_date = "2026-05-25"
+
+[vars]
+CREEM_PRODUCT_ID = "prod_1zRfEdOoyK8jGsPFKhXEM2"
+CREEM_SUCCESS_URL = "https://beadsnap.app/pro-pattern.html?purchase=success"
+
+[env.production]
+vars = { ENVIRONMENT = "production", CREEM_PRODUCT_ID = "prod_1zRfEdOoyK8jGsPFKhXEM2", CREEM_SUCCESS_URL = "https://beadsnap.app/pro-pattern.html?purchase=success" }

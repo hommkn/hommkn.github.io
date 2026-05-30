@@ -165,11 +165,23 @@
       link.addEventListener('click',()=>trackEvent('click_pro_pattern',{location:link.dataset.location||'unknown'}));
     });
     document.querySelectorAll('[data-lead-form]').forEach(form=>{
+      form.target = 'bd-iframe';
       form.addEventListener('submit',()=>{
         trackEvent('subscribe_pro_pattern',{location:form.dataset.location||'unknown',provider:'buttondown'});
-        window.open('https://buttondown.com/beadsnap','popupwindow');
+        form.style.display = 'none';
+        var success = form.parentElement.querySelector('.lead-success');
+        if (success) success.hidden = false;
       });
     });
+    // Hidden iframe for Buttondown (avoids popup)
+    (function(){
+      var iframe = document.createElement('iframe');
+      iframe.id = 'bd-iframe';
+      iframe.name = 'bd-iframe';
+      iframe.style.display = 'none';
+      iframe.setAttribute('aria-hidden', 'true');
+      document.body.appendChild(iframe);
+    })();
     // Purchase button: open the Creem product payment link directly.
     const buyBtn=document.querySelector('[data-pro-pattern-link][data-location="purchase"]');
     if(buyBtn){

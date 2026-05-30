@@ -108,6 +108,9 @@
     .lead-magnet h2{margin-bottom:6px}
     .lead-form{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:18px 0 10px}
     .lead-form input[type="email"]{min-height:48px;min-width:260px;flex:1 1 260px;max-width:370px;border:2px solid var(--line);border-radius:999px;padding:0 18px;font:inherit;color:var(--ink);background:#fff}
+    .lead-success{text-align:center;padding:16px 0}
+    .lead-success-title{font-weight:800;font-size:1.1rem;color:var(--ink);margin-bottom:6px}
+    .lead-success-sub{font-size:.92rem;margin:0;color:var(--ink-soft)}
     .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:14px 24px;border:none;border-radius:999px;font-family:inherit;font-weight:800;font-size:1rem;cursor:pointer;transition:transform .15s,box-shadow .15s,background .15s;min-height:48px;text-decoration:none}
     .btn-primary{background:var(--coral);color:#fff;box-shadow:0 4px 0 var(--coral-dark)}
     .btn-primary:hover{background:var(--coral-dark);transform:translateY(-2px);box-shadow:0 6px 0 var(--coral-dark);text-decoration:none;color:#fff}
@@ -234,6 +237,10 @@
             <input id="blog-list-email" type="email" name="email" placeholder="you@example.com" autocomplete="email" required>
             <button class="btn btn-primary" type="submit">Send me the free patterns</button>
           </form>
+          <div class="lead-success" hidden>
+            <p class="lead-success-title">✅ Thanks! Your free patterns are on the way.</p>
+            <p class="lead-success-sub">Your download should start automatically. If not, <a href="downloads/10-free-beginner-bead-patterns.pdf" data-download-free-patterns data-location="blog-list">click here to open the PDF</a>.</p>
+          </div>
           <p><a href="free-patterns.html" data-free-patterns-link data-location="blog-list">Preview the free pattern pack</a></p>
         </div>
       </div>
@@ -270,11 +277,30 @@
       link.addEventListener('click',()=>trackEvent('click_pro_pattern',{location:link.dataset.location||'unknown'}));
     });
     document.querySelectorAll('[data-lead-form]').forEach(form=>{
+      form.target = 'bd-iframe';
       form.addEventListener('submit',()=>{
         trackEvent('subscribe_free_patterns',{location:form.dataset.location||'unknown',provider:'buttondown'});
-        window.open('https://buttondown.com/beadsnap','popupwindow');
+        form.style.display = 'none';
+        var success = form.parentElement.querySelector('.lead-success');
+        if (success) success.hidden = false;
+        var a = document.createElement('a');
+        a.href = 'downloads/10-free-beginner-bead-patterns.pdf';
+        a.download = '10-free-beginner-bead-patterns.pdf';
+        a.style.display = 'none';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
       });
     });
+    // Hidden iframe for Buttondown (avoids popup)
+    (function(){
+      var iframe = document.createElement('iframe');
+      iframe.id = 'bd-iframe';
+      iframe.name = 'bd-iframe';
+      iframe.style.display = 'none';
+      iframe.setAttribute('aria-hidden', 'true');
+      document.body.appendChild(iframe);
+    })();
   </script>
 </body>
 </html>

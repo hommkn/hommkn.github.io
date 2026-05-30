@@ -52,6 +52,9 @@
     .pattern-card h3{font-size:1rem;margin-bottom:4px}
     .pattern-card p{font-size:.92rem;margin:0}
     .download-note{font-size:.9rem;margin:0;color:var(--ink-soft)}
+    .lead-success{text-align:center;padding:16px 0}
+    .lead-success-title{font-weight:800;font-size:1.1rem;color:var(--ink);margin-bottom:6px}
+    .lead-success-sub{font-size:.92rem;margin:0;color:var(--ink-soft)}
     footer.site-footer{background:var(--ink);color:var(--bg-cream);padding:40px 0;text-align:center}
     footer.site-footer a{color:var(--bg-cream)}
     footer.site-footer p{color:rgba(250,246,240,.7);margin-bottom:8px}
@@ -91,6 +94,10 @@
             <input id="free-patterns-email" type="email" name="email" placeholder="you@example.com" autocomplete="email" required>
             <button class="btn btn-primary" type="submit">Send me the free patterns</button>
           </form>
+          <div class="lead-success" hidden>
+            <p class="lead-success-title">✅ Thanks! Your free patterns are on the way.</p>
+            <p class="lead-success-sub">Your download should start automatically. If not, <a href="downloads/10-free-beginner-bead-patterns.pdf" data-download-free-patterns data-location="free-patterns-page">click here to open the PDF</a>.</p>
+          </div>
           <p class="download-note">Already subscribed? <a href="downloads/10-free-beginner-bead-patterns.pdf" data-download-free-patterns data-location="free-patterns-page">Open the printable PDF</a>.</p>
         </div>
       </div>
@@ -144,17 +151,39 @@
     function trackEvent(name,params={}){
       if(typeof gtag==='function')gtag('event',name,params);
     }
-    document.querySelectorAll('[data-lead-form]').forEach(form=>{
-      form.addEventListener('submit',()=>{
+    // Hidden iframe for Buttondown form submission (avoids popup)
+    var leadIframe = document.getElementById('bd-iframe');
+    if (!leadIframe) {
+      leadIframe = document.createElement('iframe');
+      leadIframe.id = 'bd-iframe';
+      leadIframe.name = 'bd-iframe';
+      leadIframe.style.display = 'none';
+      leadIframe.setAttribute('aria-hidden', 'true');
+      document.body.appendChild(leadIframe);
+    }
+    document.querySelectorAll('[data-lead-form]').forEach(function(form){
+      form.target = 'bd-iframe';
+      form.addEventListener('submit', function(){
         trackEvent('subscribe_free_patterns',{location:form.dataset.location||'unknown',provider:'buttondown'});
-        window.open('https://buttondown.com/beadsnap','popupwindow');
+        // Hide form, show success message
+        form.style.display = 'none';
+        var success = document.querySelector('.lead-success');
+        if (success) success.hidden = false;
+        // Auto-trigger PDF download
+        var a = document.createElement('a');
+        a.href = 'downloads/10-free-beginner-bead-patterns.pdf';
+        a.download = '10-free-beginner-bead-patterns.pdf';
+        a.style.display = 'none';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
       });
     });
-    document.querySelectorAll('[data-download-free-patterns]').forEach(link=>{
-      link.addEventListener('click',()=>trackEvent('download_free_patterns',{location:link.dataset.location||'unknown'}));
+    document.querySelectorAll('[data-download-free-patterns]').forEach(function(link){
+      link.addEventListener('click', function(){trackEvent('download_free_patterns',{location:link.dataset.location||'unknown'});});
     });
-    document.querySelectorAll('[data-pro-pattern-link]').forEach(link=>{
-      link.addEventListener('click',()=>trackEvent('click_pro_pattern',{location:link.dataset.location||'unknown'}));
+    document.querySelectorAll('[data-pro-pattern-link]').forEach(function(link){
+      link.addEventListener('click', function(){trackEvent('click_pro_pattern',{location:link.dataset.location||'unknown'});});
     });
   </script>
 </body>
