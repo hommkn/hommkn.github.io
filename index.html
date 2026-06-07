@@ -496,6 +496,12 @@
       const hueDiff=Math.abs(((hsl.h-p.h+180)%360)-180);
       if(hsl.s>.18&&p.s>.18)d+=hueDiff*hueDiff*.18;
       if(hsl.s>.38&&p.s<.18)d+=1800;
+      if(hsl.s<.18){
+        if(hsl.l<.88&&p.code==='P01')d+=650;
+        if(hsl.l>.12&&p.code==='P34')d+=650;
+        if(hsl.l>.38&&hsl.l<.76&&(p.code==='P01'||p.code==='P34'))d+=1400;
+        if(p.s>.28)d+=900;
+      }
       const inputFamily=colorFamilyFromHsl(hsl),candidateFamily=paletteFamily(p);
       if((inputFamily==='cyan'||inputFamily==='blue')&&hsl.s>.42&&hsl.l>.18&&candidateFamily==='neutral')d+=3200;
       if(hsl.l<.24&&hsl.s<.35&&(p.code==='P21'||p.code==='P22'||p.code==='P23'||p.code==='P24'||p.code==='P25'))d+=2600;
@@ -534,7 +540,7 @@
       let spread=0;
       for(const color of colors){const l=rgbToLab(color[0],color[1],color[2]),dl=l.l-lab.l,da=l.a-lab.a,db=l.b-lab.b;spread+=Math.sqrt(dl*dl+da*da+db*db)}
       spread/=Math.max(1,colors.length);
-      return{rgb,lab,hsl,canClean:spread<18||hsl.s<.18}
+      return{rgb,lab,hsl,spread,canClean:spread<10}
     }
     function neutralBackgroundRgb(bg){
       const avg=(bg.rgb[0]+bg.rgb[1]+bg.rgb[2])/3;
