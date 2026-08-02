@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>BeadSnap — Free Photo to Perler Bead Pattern Maker</title>
+  <title>BeadSnap - Free Photo to Perler Bead Pattern Maker</title>
   <meta name="description" content="Turn your own photo into a printable Perler bead pattern for free, with bead counts and a shopping list. Unlock Pro Pattern for smarter automatic cropping, color matching, and cleaner PDFs." />
   <meta name="keywords" content="perler bead pattern, photo to bead, pixel art, fuse bead, hama bead, crafting tool, free pattern maker" />
   <meta name="author" content="BeadSnap" />
@@ -13,7 +13,7 @@
 
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://beadsnap.app/" />
-  <meta property="og:title" content="BeadSnap — Free Photo to Perler Bead Pattern Maker" />
+  <meta property="og:title" content="BeadSnap - Free Photo to Perler Bead Pattern Maker" />
   <meta property="og:description" content="Turn your own photo into a printable bead pattern with bead counts, a shopping list, and optional Pro Pattern upgrades." />
   <meta property="og:image" content="https://beadsnap.app/images/og-image.jpg" />
   <meta property="og:image:width" content="1200" />
@@ -22,7 +22,7 @@
 
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:url" content="https://beadsnap.app/" />
-  <meta name="twitter:title" content="BeadSnap — Free Photo to Perler Bead Pattern Maker" />
+  <meta name="twitter:title" content="BeadSnap - Free Photo to Perler Bead Pattern Maker" />
   <meta name="twitter:description" content="Turn any photo into a Perler bead pattern for free. Runs entirely in your browser." />
   <meta name="twitter:image" content="https://beadsnap.app/images/og-image.jpg" />
 
@@ -146,6 +146,15 @@
     .bead-name{flex:1;font-size:.9rem;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
     .bead-count{font-weight:800;color:var(--coral-dark);font-size:.9rem;font-variant-numeric:tabular-nums}
     .btn.is-copied{background:var(--teal)!important;box-shadow:0 4px 0 var(--teal-dark)!important}
+    .result-conversion-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:22px 0}
+    .result-panel{border:2px solid var(--line);border-radius:var(--radius-sm);background:var(--bg-cream-soft);padding:20px;text-align:left}
+    .result-panel h3{margin-bottom:6px;color:var(--ink)}
+    .result-panel p{margin-bottom:14px}
+    .result-panel .btn{width:100%;justify-content:center}
+    .result-email-panel.is-highlighted{border-color:var(--teal);box-shadow:0 0 0 4px rgba(91,168,160,.16)}
+    .download-nudge{display:none;margin:14px auto 0;padding:12px 16px;border-radius:var(--radius-sm);background:#ECF7F5;color:var(--teal-dark);font-weight:800;max-width:620px;text-align:center}
+    .download-nudge.is-visible{display:block}
+    @media(max-width:760px){.result-conversion-grid{grid-template-columns:1fr}}
 
     /* CONTROLS */
     .controls{background:var(--bg-cream-soft);border-radius:var(--radius);padding:20px 24px;margin-bottom:20px}
@@ -213,14 +222,14 @@
 
     <section class="hero">
       <div class="container">
-        <h1>Turn any photo into a <span class="accent">Perler bead</span> pattern</h1>
-        <p class="lead">Upload your own photo and get a printable bead pattern, color-matched bead counts, and a shopping list. The free tool runs in your browser; Pro Pattern adds smarter automatic cleanup for $5.</p>
+        <h1>Upload a photo. Get a printable <span class="accent">Perler bead</span> pattern in seconds.</h1>
+        <p class="lead">BeadSnap turns your picture into a bead grid, printable PDF, bead counts, and a shopping list. Start free in your browser, then upgrade this pattern if you want a cleaner Pro version.</p>
         <div class="hero-cta">
-          <a href="#tool" class="btn btn-primary">Get started — it's free</a>
+          <a href="#tool" class="btn btn-primary" data-tool-link data-location="home-hero">Upload a photo</a>
           <a href="#how-it-works" class="btn btn-secondary">See how it works</a>
         </div>
         <div class="hero-demo">
-          <img src="images/hero-demo.jpg" alt="BeadSnap before and after — photo turned into Perler bead pattern" loading="lazy" width="760" height="400" />
+          <img src="images/hero-demo.jpg" alt="BeadSnap before and after photo turned into Perler bead pattern" loading="lazy" width="760" height="400" />
         </div>
       </div>
     </section>
@@ -255,10 +264,10 @@
         <h2 id="tool-heading" class="sr-only">Photo to Perler Bead converter tool</h2>
         <div class="tool-card">
           <div class="dropzone" id="dropzone" tabindex="0" role="button" aria-label="Upload an image by clicking or dragging a file here">
-            <span class="dropzone-icon" aria-hidden="true">🎨</span>
-            <h3>Drop a photo here</h3>
-            <p>or click to choose from your device — PNG, JPG, or WebP</p>
-            <span class="btn btn-primary" aria-hidden="true">Choose a photo</span>
+            <span class="dropzone-icon" aria-hidden="true">*</span>
+            <h3>Upload your photo</h3>
+            <p>Get a printable bead pattern, PDF, and shopping list in your browser.</p>
+            <span class="btn btn-primary" aria-hidden="true">Choose photo</span>
           </div>
           <input type="file" id="file-input" class="visually-hidden-file" accept="image/png,image/jpeg,image/webp" aria-label="Upload an image file" />
 
@@ -293,24 +302,32 @@
               <div class="bead-color-list" id="bead-color-list" role="list"></div>
             </div>
             <div class="action-row">
-              <button class="btn btn-primary" id="download-btn">⬇ Download PNG</button>
-              <button class="btn btn-primary" id="download-pdf-btn">📄 Download PDF</button>
-              <button class="btn btn-secondary" id="copy-list-btn">📋 Copy shopping list</button>
-              <button class="btn btn-secondary" id="reset-btn">↺ Try another photo</button>
+              <button class="btn btn-primary" id="download-btn">Download PNG</button>
+              <button class="btn btn-primary" id="download-pdf-btn">Download PDF</button>
+              <button class="btn btn-secondary" id="copy-list-btn">Copy shopping list</button>
+              <button class="btn btn-secondary" id="reset-btn">Try another photo</button>
             </div>
-            <div class="lead-magnet" aria-labelledby="home-free-patterns-heading">
-              <h3 id="home-free-patterns-heading">Get 10 free beginner bead patterns</h3>
-              <p>Printable PDF patterns for easy family craft projects. No spam, just cute bead ideas.</p>
-              <form class="lead-form" action="https://buttondown.com/api/emails/embed-subscribe/beadsnap" method="post" target="popupwindow" data-lead-form data-location="home-results">
-                <label class="sr-only" for="home-free-patterns-email">Email address</label>
-                <input id="home-free-patterns-email" type="email" name="email" placeholder="you@example.com" autocomplete="email" required>
-                <button class="btn btn-primary" type="submit">Send me the free patterns</button>
-              </form>
-              <div class="lead-success" hidden>
-                <p class="lead-success-title">✅ Thanks! Your free patterns are on the way.</p>
-                <p class="lead-success-sub">Your download should start automatically. If not, <a href="downloads/10-free-beginner-bead-patterns.pdf" data-download-free-patterns data-location="home-results">click here to open the PDF</a>.</p>
+            <p class="download-nudge" id="download-nudge">Pattern downloaded. Want beginner tips and 10 easy printable patterns by email?</p>
+            <div class="result-conversion-grid" aria-label="Next steps after generating a bead pattern">
+              <div class="result-panel">
+                <h3>Want a cleaner version?</h3>
+                <p>Upgrade this pattern for larger sizes, smarter cropping, cleaner colors, and a Pro PDF layout.</p>
+                <a href="custom-pattern.html" class="btn btn-primary" data-pro-pattern-link data-location="home-results-upgrade">Upgrade this pattern for $5</a>
               </div>
-              <p class="lead-form-note"><a href="free-patterns.html" data-free-patterns-link data-location="home-results">See what is inside the free pack</a></p>
+              <div class="result-panel result-email-panel" id="result-email-panel" aria-labelledby="home-free-patterns-heading">
+                <h3 id="home-free-patterns-heading">Download your pattern + get beginner bead tips</h3>
+                <p>Get 10 free beginner patterns and simple tips for choosing photos, colors, and bead counts.</p>
+                <form class="lead-form" action="https://buttondown.com/api/emails/embed-subscribe/beadsnap" method="post" target="popupwindow" data-lead-form data-location="home-results-after-download">
+                  <label class="sr-only" for="home-free-patterns-email">Email address</label>
+                  <input id="home-free-patterns-email" type="email" name="email" placeholder="you@example.com" autocomplete="email" required>
+                  <button class="btn btn-primary" type="submit">Send me the tips</button>
+                </form>
+                <div class="lead-success" hidden>
+                  <p class="lead-success-title">Thanks! Your free patterns are on the way.</p>
+                  <p class="lead-success-sub">Your download should start automatically. If not, <a href="downloads/10-free-beginner-bead-patterns.pdf" data-download-free-patterns data-location="home-results-after-download">click here to open the PDF</a>.</p>
+                </div>
+                <p class="lead-form-note"><a href="free-patterns.html" data-free-patterns-link data-location="home-results-after-download">See what is inside the free pack</a></p>
+              </div>
             </div>
           </div>
         </div>
@@ -324,17 +341,17 @@
           <div class="step">
             <div class="step-icon" aria-hidden="true">1</div>
             <h3>Upload</h3>
-            <p>Drop in a photo or pick one from your device. Anything bright and bold works best.</p>
+            <p>Upload a photo from your phone or desktop. The tool starts instantly in your browser.</p>
           </div>
           <div class="step">
             <div class="step-icon" aria-hidden="true">2</div>
             <h3>Adjust</h3>
-            <p>Slide the size control to set how detailed your bead pattern should be — from chunky to intricate.</p>
+            <p>Slide the size control to choose how detailed your bead pattern should be.</p>
           </div>
           <div class="step">
             <div class="step-icon" aria-hidden="true">3</div>
             <h3>Download</h3>
-            <p>Save your pattern as a PNG. Print it, prop it up next to your pegboard, and start beading.</p>
+            <p>Download PNG or PDF, copy the shopping list, or upgrade for a cleaner Pro version.</p>
           </div>
         </div>
       </div>
@@ -343,8 +360,8 @@
     <section class="story-section" aria-labelledby="story-heading">
       <div class="container">
         <h2 id="story-heading">A little tool, built with love</h2>
-        <p>I'm a dad who built BeadSnap on weekend afternoons so my kids and I could turn our favorite photos into bead crafts at the kitchen table. No ads, no signups, no nonsense — just a tiny tool that hopefully sparks a few rainy-day art sessions in your home too.</p>
-        <div class="privacy-badge" role="note">🔒 Your photos never leave your browser — everything runs locally for your privacy.</div>
+        <p>I'm a dad who built BeadSnap on weekend afternoons so my kids and I could turn our favorite photos into bead crafts at the kitchen table. No ads, no signups, no nonsense - just a tiny tool that hopefully sparks a few rainy-day art sessions in your home too.</p>
+        <div class="privacy-badge" role="note">Your photos never leave your browser - everything runs locally for your privacy.</div>
       </div>
     </section>
 
@@ -352,8 +369,8 @@
       <div class="container">
         <div class="product-cta-box">
           <h2 id="pattern-pack-heading">Want a cleaner automatic pattern?</h2>
-          <p>The free tool is great for quick photo-to-bead patterns. Pro Pattern is planned as a $5 one-time upgrade with smarter subject cropping, better color matching, larger sizes, and cleaner printable PDFs.</p>
-          <a href="custom-pattern.html" class="btn btn-primary" data-pro-pattern-link data-location="home-pro-cta">Explore Pro Pattern</a>
+          <p>The free tool is great for quick tests. Pro Pattern is a $5 one-time upgrade for larger patterns, smarter cropping, cleaner colors, printable PDFs, and a shopping list built for real bead projects.</p>
+          <a href="custom-pattern.html" class="btn btn-primary" data-pro-pattern-link data-location="home-pro-cta">See Pro Pattern</a>
         </div>
       </div>
     </section>
@@ -379,17 +396,25 @@
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.2/jspdf.umd.min.js"></script>
   <script>
-    const dropzone=document.getElementById('dropzone'),fileInput=document.getElementById('file-input'),previewArea=document.getElementById('preview-area'),originalPreview=document.getElementById('original-preview'),outputCanvas=document.getElementById('output-canvas'),sizeSlider=document.getElementById('size-slider'),sizeValue=document.getElementById('size-value'),cropToggle=document.getElementById('crop-toggle'),downloadBtn=document.getElementById('download-btn'),downloadPdfBtn=document.getElementById('download-pdf-btn'),copyListBtn=document.getElementById('copy-list-btn'),resetBtn=document.getElementById('reset-btn'),exampleThumbs=document.querySelectorAll('.example-thumb'),totalBeadsEl=document.getElementById('total-beads'),beadColorListEl=document.getElementById('bead-color-list');
+    const dropzone=document.getElementById('dropzone'),fileInput=document.getElementById('file-input'),previewArea=document.getElementById('preview-area'),originalPreview=document.getElementById('original-preview'),outputCanvas=document.getElementById('output-canvas'),sizeSlider=document.getElementById('size-slider'),sizeValue=document.getElementById('size-value'),cropToggle=document.getElementById('crop-toggle'),downloadBtn=document.getElementById('download-btn'),downloadPdfBtn=document.getElementById('download-pdf-btn'),copyListBtn=document.getElementById('copy-list-btn'),resetBtn=document.getElementById('reset-btn'),exampleThumbs=document.querySelectorAll('.example-thumb'),totalBeadsEl=document.getElementById('total-beads'),beadColorListEl=document.getElementById('bead-color-list'),downloadNudge=document.getElementById('download-nudge'),resultEmailPanel=document.getElementById('result-email-panel');
     let sourceImage=null,lastCountsByCode=new Map();
     document.getElementById('year').textContent=new Date().getFullYear();
     function trackEvent(name,params={}){
       if(typeof gtag==='function')gtag('event',name,params);
+    }
+    function promptEmailAfterDownload(type){
+      if(downloadNudge)downloadNudge.classList.add('is-visible');
+      if(resultEmailPanel)resultEmailPanel.classList.add('is-highlighted');
+      trackEvent('prompt_email_after_download',{download_type:type});
     }
     document.querySelectorAll('[data-free-patterns-link]').forEach(link=>{
       link.addEventListener('click',()=>trackEvent('click_free_patterns',{location:link.dataset.location||'unknown'}));
     });
     document.querySelectorAll('[data-pro-pattern-link]').forEach(link=>{
       link.addEventListener('click',()=>trackEvent('click_pro_pattern',{location:link.dataset.location||'unknown'}));
+    });
+    document.querySelectorAll('[data-tool-link]').forEach(link=>{
+      link.addEventListener('click',()=>trackEvent('click_start_tool',{location:link.dataset.location||'unknown'}));
     });
     // Hidden iframe for Buttondown form submission (avoids popup)
     (function(){
@@ -740,7 +765,7 @@
       for(const[code,count]of sorted){
         const info=PALETTE_BY_CODE.get(code);if(!info)continue;
         const row=document.createElement('div');row.className='bead-color-row';row.setAttribute('role','listitem');
-        row.innerHTML=`<span class="bead-swatch" style="background:${info.hex}" aria-hidden="true"></span><span class="bead-code">${code}</span><span class="bead-name">${info.name}</span><span class="bead-count">× ${count.toLocaleString()}</span>`;
+        row.innerHTML=`<span class="bead-swatch" style="background:${info.hex}" aria-hidden="true"></span><span class="bead-code">${code}</span><span class="bead-name">${info.name}</span><span class="bead-count">x ${count.toLocaleString()}</span>`;
         frag.appendChild(row);
       }
       beadColorListEl.innerHTML='';beadColorListEl.appendChild(frag);
@@ -751,10 +776,10 @@
       const sorted=[...lastCountsByCode.entries()].sort((a,b)=>{if(b[1]!==a[1])return b[1]-a[1];return a[0].localeCompare(b[0])});
       const total=sorted.reduce((s,[,c])=>s+c,0);
       const lines=sorted.map(([code,count])=>{const info=PALETTE_BY_CODE.get(code);return`- ${code} ${info?info.name:'?'}: ${count} beads`});
-      const text=`BeadSnap pattern — shopping list (${total.toLocaleString()} beads total):\n${lines.join('\n')}`;
+      const text=`BeadSnap pattern - shopping list (${total.toLocaleString()} beads total):\n${lines.join('\n')}`;
       try{await navigator.clipboard.writeText(text)}catch{const ta=document.createElement('textarea');ta.value=text;ta.style.cssText='position:fixed;left:-9999px';document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta)}
       trackEvent('copy_shopping_list');
-      copyListBtn.classList.add('is-copied');const orig=copyListBtn.textContent;copyListBtn.textContent='✓ Copied!';
+      copyListBtn.classList.add('is-copied');const orig=copyListBtn.textContent;copyListBtn.textContent='Copied!';
       setTimeout(()=>{copyListBtn.classList.remove('is-copied');copyListBtn.textContent=orig},1500);
     });
 
@@ -763,6 +788,7 @@
       trackEvent('download_png');
       try{const link=document.createElement('a');link.download='beadsnap-pattern.png';link.href=outputCanvas.toDataURL('image/png');link.click()}
       catch(err){alert('Could not download this image. If you loaded an example, try uploading your own photo instead.')}
+      promptEmailAfterDownload('png');
     });
 
     downloadPdfBtn.addEventListener('click',()=>{
@@ -779,7 +805,7 @@
         pdf.setFontSize(14);pdf.setTextColor('#3A3530');
         pdf.text('BeadSnap Shopping List',20,30);
         pdf.setFontSize(11);pdf.setTextColor('#6B635C');
-        pdf.text('Color  —  Count  —  Code',20,50);
+        pdf.text('Color  -  Count  -  Code',20,50);
         let lineY=64;
         for(const[code,count]of sorted){
           const info=PALETTE_BY_CODE.get(code);if(!info)continue;
@@ -803,6 +829,7 @@
         pdf.text('Need more printable patterns? Visit https://beadsnap.app/free-patterns.html',20,pageH-12);
       }
       pdf.save('beadsnap-pattern.pdf');
+      promptEmailAfterDownload('pdf');
     });
 
     resetBtn.addEventListener('click',()=>{

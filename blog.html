@@ -148,6 +148,7 @@
       <div class="container">
         <h1>BeadSnap Blog</h1>
         <p>Practical tutorials for turning photos into printable bead patterns, choosing better source images, planning bead counts, and making easy family craft projects.</p>
+        <a href="index.html#tool" class="btn btn-primary" data-tool-link data-location="blog-hero">Try the free photo-to-bead maker</a>
       </div>
     </section>
 
@@ -275,6 +276,9 @@
     });
     document.querySelectorAll('[data-pro-pattern-link]').forEach(link=>{
       link.addEventListener('click',()=>trackEvent('click_pro_pattern',{location:link.dataset.location||'unknown'}));
+    });
+    document.querySelectorAll('[data-tool-link]').forEach(link=>{
+      link.addEventListener('click',()=>trackEvent('click_start_tool',{location:link.dataset.location||'unknown'}));
     });
     document.querySelectorAll('[data-lead-form]').forEach(form=>{
       form.target = 'bd-iframe';

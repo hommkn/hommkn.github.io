@@ -189,6 +189,11 @@
 
       <div class="article-body">
 
+        <div class="highlight-box">
+          <p><strong>Want to try it before reading?</strong> Upload a photo and get a printable bead pattern, PDF, bead counts, and a shopping list in your browser.</p>
+          <a href="../index.html#tool" class="btn btn-primary" data-tool-link data-location="photo-guide-top">Try the free pattern maker</a>
+        </div>
+
         <h2 id="intro">Why make bead patterns from photos?</h2>
 
         <p>There's something magical about watching a favorite photo turn into a grid of tiny colored squares — each one a real Perler bead you can place on a pegboard. It's part craft project, part puzzle, and when you fuse that last bead and hold up the finished piece? Pure satisfaction.</p>
@@ -401,7 +406,7 @@
 
         <div class="highlight-box">
           <p><strong>No signup. No download. 100% free.</strong></p>
-          <a href="../index.html#tool" class="btn btn-primary">Start making your bead pattern now →</a>
+          <a href="../index.html#tool" class="btn btn-primary" data-tool-link data-location="photo-guide-bottom">Start making your bead pattern now</a>
         </div>
 
       </div>
@@ -437,6 +442,9 @@
     });
     document.querySelectorAll('[data-pro-pattern-link]').forEach(link=>{
       link.addEventListener('click',()=>trackEvent('click_pro_pattern',{location:link.dataset.location||'unknown'}));
+    });
+    document.querySelectorAll('[data-tool-link]').forEach(link=>{
+      link.addEventListener('click',()=>trackEvent('click_start_tool',{location:link.dataset.location||'unknown'}));
     });
     document.querySelectorAll('[data-lead-form]').forEach(form=>{
       form.target = 'bd-iframe';
